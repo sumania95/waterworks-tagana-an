@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Waterworks</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="Codedthemes" />
+  <!-- Favicon icon -->
+  <link rel="icon" href="{% static 'icon/lgutubodlogo.png'%}" type="image/x-icon">
+  <link rel="stylesheet" href="{% static 'premium/assets/sweetalert2/sweetalert2.min.css'%}">
+  <!-- vendor css -->
+  <link rel="stylesheet" href="{% static 'premium/assets/css/style.css'%}">
+
+  {% block 'link' %}
+
+  {% endblock %}
+
+</head>
+<body>
+  <div class="loader-bg">
+    <div class="loader-track">
+      <div class="loader-fill"></div>
+    </div>
+  </div>
+  <!-- [ Pre-loader ] End -->
+  <!-- [ navigation menu ] start -->
+  <nav class="pcoded-navbar menupos-fixed menu-dark ">
+    <div class="navbar-wrapper  ">
+      <div class="navbar-content scroll-div " >
+        <ul class="nav pcoded-inner-navbar ">
+          <li class="nav-item pcoded-menu-caption">
+            <label>Navigation</label>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'waterworks_home' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'waterworks_profile' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Profile</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'waterworks_reading' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Reading</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'waterworks_billing_period' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Billing Period</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'waterworks_barangay' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Barangay</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Year</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-user"></i></span><span class="pcoded-mtext">Accounts</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-printer"></i></span><span class="pcoded-mtext">Reports</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-activity"></i></span><span class="pcoded-mtext">Audit Trail</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-log-out text-danger"></i></span><span class="pcoded-mtext">Sign Out</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <header class="navbar pcoded-header navbar-expand-lg navbar-light headerpos-fixed header-purple">
+
+
+    <div class="m-header">
+      <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
+      <a href="{% url 'waterworks_home' %}" class="b-brand text-center">
+        GOVPH | WATERWORKS
+      </a>
+      <a href="#!" class="mob-toggler">
+        <i class="feather icon-more-vertical"></i>
+      </a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          {% block 'add_new' %}
+
+          {% endblock %}
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li>
+          <div class="dropdown">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon feather icon-layers"></i></a>
+            <div class="dropdown-menu dropdown-menu-right notification">
+              <div class="card-header p-2">
+                <h6>My Application</h6>
+              </div>
+              <ul class="pro-body">
+                <li class="notification">
+                  <td style="white-space:nowrap;width:50%;"><a href="{% url 'waterworks_home' %}" type="button" class="btn w-40" name="button"><i class="icon feather icon-home fa-2x text-warning"></i><br>SPRING HRIS</a></td>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="dropdown drp-user">
+            <a href="#!" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="{% static 'user_images/user_male.png' %}" width="40px" height="40px" class="img-radius wid-40" alt="User-Profile-Image">
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+
+  </header>
+
+  <div class="pcoded-main-container">
+    <div class="pcoded-content">
+      <div class="row">
+        {% block 'content' %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'premium/assets/js/vendor-all.min.js'%}"></script>
+  <script src="{% static 'premium/assets/js/plugins/bootstrap.min.js'%}"></script>
+  <script src="{% static 'premium/assets/js/pcoded.min.js'%}"></script>
+  <script src="{% static 'premium/assets/js/plugins/apexcharts.min.js'%}"></script>
+  <script src="{% static 'premium/assets/sweetalert2/sweetalert2.min.js'%}"></script>
+  <script type="text/javascript">
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+  </script>
+
+  {% block 'script' %}
+  {% endblock %}
+
+</body>
+
+</html>
