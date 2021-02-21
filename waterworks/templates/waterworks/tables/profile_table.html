@@ -3,6 +3,15 @@
   <td>{{forloop.counter|add:start}}</td>
   <td>
     {{p.name}}
+    {% if p.meter_installation.status == '1' %}
+      <span class="badge badge-success">Active</span>
+    {% elif p.meter_installation.status == '2' %}
+      <span class="badge badge-danger">Disconnected</span>
+    {% elif p.permanently_disconnected %}
+      <span class="badge badge-warning">Permanently Disconnected</span>
+    {% else %}
+      <span class="badge badge-secondary">New</span>
+    {% endif %}
   </td>
   <td>
     {{ p.barangay }}

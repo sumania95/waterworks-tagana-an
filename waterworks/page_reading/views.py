@@ -5,14 +5,18 @@ from django.views.generic import (
     ListView,
     DetailView,
 )
-
+#functions
+from django.db.models.functions import Coalesce,Concat
+from django.db.models import Q,F,Sum,Count,Max
+from django.db.models import Value
+from django.urls import reverse
 #JSON AJAX
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.template import RequestContext
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Models
-from waterworks.models import Reading
+from waterworks.models import Profile,Barangay
 success = 'success'
 info = 'info'
 error = 'error'
@@ -22,8 +26,13 @@ question = 'question'
 class Waterworks_Reading(TemplateView):
     template_name = 'waterworks/pages/reading.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['barangay'] = Barangay.objects.filter(is_active=True)
+        return context
+
 class Waterworks_Reading_Table_AJAXView(View):
-    queryset = Reading.objects.all()
+    queryset = Profile.objects.all()
     template_name = 'waterworks/tables/reading_table.html'
     def get(self, request):
         data = dict()
@@ -38,7 +47,7 @@ class Waterworks_Reading_Table_AJAXView(View):
             end = None
         if barangay or search or start or end:
             data['form_is_valid'] = True
-            data['counter'] = self.queryset.filter(name__icontains = search).count()
-            reading = self.queryset.filter(name__icontains = search).order_by('name')[int(start):int(end)]
-            data['reading'] = render_to_string(self.template_name,{'reading':reading,'start':start})
+            data['counter'] = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains=search),meter_installation__status=1,barangay=barangay).count()
+            profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains=search),meter_installation__status=1,barangay=barangay).order_by('surname','firstname')[int(start):int(end)]
+            data['profile'] = render_to_string(self.template_name,{'profile':profile,'start':start})
         return JsonResponse(data)

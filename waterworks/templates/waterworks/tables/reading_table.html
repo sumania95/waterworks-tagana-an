@@ -1,11 +1,17 @@
-{% for p in reading %}
+{% for p in profile %}
 <tr>
   <td>{{forloop.counter|add:start}}</td>
   <td>
     {{p.name}}
   </td>
   <td>
-    {{ p.is_active|yesno:"Active,Inactive" }}
+    {{p.meter_installation.meter_no}}
+  </td>
+  <td>
+    {{ p.barangay }}
+  </td>
+  <td>
+    {{p.meter_installation.reading}}
   </td>
   <td>
     <a href="#" class="btn btn-warning btn-sm" name="button">Update</a>

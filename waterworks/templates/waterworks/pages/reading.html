@@ -20,8 +20,11 @@
           <tr>
             <td>Filter</td>
             <td class="pr-1">
-              <select class="form-control" name="filter" id="filter">
+              <select class="form-control" name="barangay" id="barangay">
                 <option value="0">-----------</option>
+                {% for p in barangay %}
+                <option value="{{p.id}}">{{p.name}}</option>
+                {% endfor %}
               </select>
             </td>
             <td>
@@ -38,11 +41,13 @@
             <tr>
               <th width="5%">#</th>
               <th>Name</th>
-              <th width="5%">Status</th>
+              <th width="5%">Meter No</th>
+              <th width="5%">Barangay</th>
+              <th width="5%">Reading</th>
               <th width="10%">Action</th>
             </tr>
           </thead>
-          <tbody id="barangay_table">
+          <tbody id="reading_table">
           </tbody>
         </table>
       </div>
@@ -77,15 +82,16 @@
   }
   function load_data(start,end){
     var search = $("#search").val();
+    var barangay = $("#barangay").val();
     $.ajax({
-      url: '{% url 'waterworks_barangay_table_api' %}',
+      url: '{% url 'waterworks_reading_table_api' %}',
       type: 'get',
-      data: {start:start,end:end,search:search},
+      data: {start:start,end:end,search:search,barangay:barangay},
       dataType: 'json',
       success:function(data){
         counts = data.counter;
         $('#counter').html(data.counter + " record(s) found");
-        $('#barangay_table').html(data.barangay);
+        $('#reading_table').html(data.profile);
         disabled();
       },
     });
@@ -101,6 +107,11 @@
     load_data(start,end);
   });
   $('#search').change(function() {
+    start = 0;
+    end = 10;
+    load_data(start,end);
+  });
+  $('#barangay').change(function() {
     start = 0;
     end = 10;
     load_data(start,end);
