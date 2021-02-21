@@ -30,6 +30,9 @@
             title: data.message_title
           });
           form_load();
+          if (data.url){
+            window.location.href = data.url;
+          }
         },
         error:function(error){
           Toast.fire({

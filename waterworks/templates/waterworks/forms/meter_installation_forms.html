@@ -1,7 +1,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 <div class="card-body">
-  <form method="POST" enctype="multipart/form-data" data-url="{% if is_Create %}{% url 'waterworks_reading_period_create_api' %}{% else %}{% url 'waterworks_reading_period_update_save_api' reading_period.id %}{% endif %}" class="custom-form">
+  <form method="POST" enctype="multipart/form-data" data-url="{% if is_Create %}{% url 'waterworks_profile_meter_installation_create_save_api' profile.id %}{% endif %}" class="custom-form">
     {{form|crispy}}
     <button type="submit" class="btn btn-{{btn_name}}">{{btn_title}}</button>
   </form>
@@ -29,7 +29,6 @@
             type: data.message_type,
             title: data.message_title
           });
-          form_load();
           if (data.url){
             window.location.href = data.url;
           }

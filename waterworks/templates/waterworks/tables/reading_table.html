@@ -2,7 +2,7 @@
 <tr>
   <td>{{forloop.counter|add:start}}</td>
   <td>
-    {{p.name}}
+    {{p.name|upper}}
   </td>
   <td>
     {{p.meter_installation.meter_no}}
@@ -14,7 +14,10 @@
     {{p.meter_installation.reading}}
   </td>
   <td>
-    <a href="#" class="btn btn-warning btn-sm" name="button">Update</a>
+    <input type="text" class="form-control" name="" value="">
+  </td>
+  <td>
+    <a href="#" class="btn btn-primary btn-round" name="button"><i class="feather icon-save"></i></a>
   </td>
 </tr>
 {% empty %}

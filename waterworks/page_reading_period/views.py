@@ -5,7 +5,11 @@ from django.views.generic import (
     ListView,
     DetailView,
 )
-
+#functions
+from django.db.models.functions import Coalesce,Concat
+from django.db.models import Q,F,Sum,Count,Max
+from django.db.models import Value
+from django.urls import reverse
 #JSON AJAX
 from django.template.loader import render_to_string
 from django.http import JsonResponse
@@ -61,6 +65,7 @@ class Waterworks_Reading_Period_Create_AJAXView(View):
                     form.save()
                     data['message_type'] = success
                     data['message_title'] = 'Successfully saved.'
+                    data['url'] = reverse('waterworks_reading_period')
         return JsonResponse(data)
 
 class Waterworks_Reading_Period_Update(TemplateView):

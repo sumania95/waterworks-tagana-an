@@ -2,7 +2,7 @@
 <tr>
   <td>{{forloop.counter|add:start}}</td>
   <td>
-    {{p.get_month_display}} {{p.year.name}}
+    {{p.get_month_display|upper}} {{p.year.name}}
   </td>
   <td>
     {{p.due_date}} - {{p.disconnection_date}}

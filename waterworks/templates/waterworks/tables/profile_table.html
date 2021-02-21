@@ -2,7 +2,7 @@
 <tr>
   <td>{{forloop.counter|add:start}}</td>
   <td>
-    {{p.name}}
+    {{p.name|upper}}
     {% if p.meter_installation.status == '1' %}
       <span class="badge badge-success">Active</span>
     {% elif p.meter_installation.status == '2' %}
@@ -20,7 +20,7 @@
     {{ p.classification }}
   </td>
   <td>
-    <a href="{% url 'waterworks_profile_update' p.id %}" class="btn btn-warning btn-sm" name="button">Update</a>
+    <a href="{% url 'waterworks_profile_detail' p.id %}" class="btn btn-secondary btn-sm" name="button">View</a>
   </td>
 </tr>
 {% empty %}

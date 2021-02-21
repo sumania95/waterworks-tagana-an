@@ -2,7 +2,7 @@
 <tr>
   <td>{{forloop.counter|add:start}}</td>
   <td>
-    {{p.name}}
+    {{p.name|upper}}
   </td>
   <td>
     {{ p.is_active|yesno:"Active,Inactive" }}
