@@ -1,18 +1,15 @@
-from django.urls import path
+from django.urls import path,include
 from .import views
 
 from .views import (
     Waterworks_Home,
-    Waterworks_Profile,
-    Waterworks_Reading,
-    Waterworks_Billing_Period,
-    Waterworks_Barangay,
 )
 
 urlpatterns = [
     path('', Waterworks_Home.as_view(), name = 'waterworks_home'),
-    path('profile', Waterworks_Profile.as_view(), name = 'waterworks_profile'),
-    path('reading', Waterworks_Reading.as_view(), name = 'waterworks_reading'),
-    path('billing-period', Waterworks_Billing_Period.as_view(), name = 'waterworks_billing_period'),
-    path('barangay', Waterworks_Barangay.as_view(), name = 'waterworks_barangay'),
+    path('profile/', include('waterworks.page_profile.urls')),
+    path('reading/', include('waterworks.page_reading.urls')),
+    path('barangay/',include('waterworks.page_barangay.urls')),
+    path('reading-period/',include('waterworks.page_reading_period.urls')),
+    path('year/',include('waterworks.page_year.urls')),
 ]

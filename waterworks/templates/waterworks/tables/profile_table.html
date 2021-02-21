@@ -1,0 +1,21 @@
+{% for p in profile %}
+<tr>
+  <td>{{forloop.counter|add:start}}</td>
+  <td>
+    {{p.name}}
+  </td>
+  <td>
+    {{ p.barangay }}
+  </td>
+  <td>
+    {{ p.classification }}
+  </td>
+  <td>
+    <a href="{% url 'waterworks_profile_update' p.id %}" class="btn btn-warning btn-sm" name="button">Update</a>
+  </td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="12" class="text-center">No data available</td>
+</tr>
+{% endfor %}

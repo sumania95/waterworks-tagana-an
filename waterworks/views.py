@@ -22,17 +22,5 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class Waterworks_Home(TemplateView):
     template_name = 'waterworks/pages/dashboard.html'
 
-class Waterworks_Profile(TemplateView):
-    template_name = 'waterworks/pages/profile.html'
-
-class Waterworks_Reading(TemplateView):
-    template_name = 'waterworks/pages/reading.html'
-
-class Waterworks_Billing_Period(TemplateView):
-    template_name = 'waterworks/pages/billing_period.html'
-
-class Waterworks_Barangay(TemplateView):
-    template_name = 'waterworks/pages/barangay.html'
-
 class Waterworks_Accounts(TemplateView):
     template_name = 'waterworks/pages/accounts.html'

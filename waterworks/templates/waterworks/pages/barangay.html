@@ -9,17 +9,20 @@
 </div>
 <div class="col-md-12">
   <div class="card">
-    <div class="card-header p-2">
+    <div class="card-header p-3">
       <table>
-        <td>
-          <a href="#" type="button" class="btn btn-primary" name="button"><i class="feather icon-user-plus mr-2"></i>New</a>
-        </td>
+        <tr>
+          <td class="pl-2"><small id="counter"></small></td>
+        </tr>
       </table>
       <div class="card-header-right">
         <table>
           <tr>
             <td>
               <input type="search" class="form-control float-right mr-1" placeholder="Search...." name="search" id="search">
+            </td>
+            <td>
+              <a href="{% url 'waterworks_barangay_create' %}" type="button" class="btn btn-primary" name="button">New</a>
             </td>
           </tr>
         </table>
@@ -36,12 +39,12 @@
               <th width="10%">Action</th>
             </tr>
           </thead>
-          <tbody id="table-profile-ajax">
+          <tbody id="barangay_table">
           </tbody>
         </table>
       </div>
     </div>
-    <div class="card-footer p-1">
+    <div class="card-footer p-1 m-0 text-center">
       <ul class="pagination">
         <li class="page-item" id="page_prev"><button class="page-link" id="button_prev" href="#!">Prev</button></li>
         <li class="page-item" id="page_next"><button class="page-link" id="button_next" href="#!">Next</button></li>
@@ -56,7 +59,7 @@
 <script>
   var start = 0;
   var end = 10;
-  var counts=20;
+  var counts;
   function disabled(){
     if (start === 0){
       $("#page_prev").addClass("disabled", true);
@@ -69,40 +72,37 @@
       $("#page_next").removeClass("disabled", false);
     }
   }
-  function filterload(start,end){
+  function load_data(start,end){
     var search = $("#search").val();
     $.ajax({
-      url: '#',
+      url: '{% url 'waterworks_barangay_table_api' %}',
       type: 'get',
       data: {start:start,end:end,search:search},
       dataType: 'json',
       success:function(data){
         counts = data.counter;
-        // $('#counter').html(data.counter + " record(s) found");
-        $('#table-profile-ajax').html(data.profile_table);
+        $('#counter').html(data.counter + " record(s) found");
+        $('#barangay_table').html(data.barangay);
+        disabled();
       },
     });
   };
   $('#button_prev').click(function() {
     start-=10
     end-=10
-    filterload(start,end);
-    disabled();
+    load_data(start,end);
   });
   $('#button_next').click(function() {
     start+=10
     end+=10
-    filterload(start,end);
-    disabled();
+    load_data(start,end);
   });
   $('#search').change(function() {
     start = 0;
     end = 10;
-    filterload(start,end);
-    disabled();
+    load_data(start,end);
   });
-  filterload(start,end);
-  disabled();
+  load_data(start,end);
 </script>
 
 {% endblock %}

@@ -19,6 +19,9 @@ class Barangay(models.Model):
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
+    def __str__(self):
+        return str(self.name)
+
     class Meta:
         ordering = ['name']
 
@@ -28,10 +31,19 @@ class Year(models.Model):
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
+    def __str__(self):
+        return str(self.name)
+
 class Classification(models.Model):
     name                    = models.CharField(max_length = 200)
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        ordering = ['name']
 
 class Classification_Rates(models.Model):
     classification          = models.ForeignKey(Classification, on_delete = models.CASCADE)
@@ -41,11 +53,14 @@ class Classification_Rates(models.Model):
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
+    def __str__(self):
+        return str(self.name)
+
 class Profile(models.Model):
     surname                 = models.CharField(max_length = 200)
     firstname               = models.CharField(max_length = 200)
     middlename              = models.CharField(max_length = 200,blank=True)
-    barangay                = models.CharField(max_length = 200)
+    barangay                = models.ForeignKey(Barangay, on_delete = models.CASCADE)
     classification          = models.ForeignKey(Classification, on_delete = models.CASCADE)
     service_charge          = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
     water_meter_charge      = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
@@ -56,6 +71,10 @@ class Profile(models.Model):
     @property
     def primary_key_custom(self):
         return str(self.date_created.year) + str(self.id)
+
+    @property
+    def name(self):
+        return str(self.surname) + ", " + str(self.firstname)
 
     class Meta:
         ordering = ['surname','firstname','middlename']
@@ -77,12 +96,15 @@ month = (
 
 class Reading_Period(models.Model):
     user                    = models.ForeignKey(User, on_delete = models.CASCADE)
-    month                   = models.CharField(max_length=200,choices=month,default=1)
+    month                   = models.CharField(max_length=200,choices=month)
     year                    = models.ForeignKey(Year, on_delete = models.CASCADE)
     due_date                = models.DateTimeField(default=timezone.now)
     disconnection_date      = models.DateTimeField(default=timezone.now)
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
+
+    class Meta:
+        ordering = ['month']
 
 status = (
     ('1', 'Active',),
