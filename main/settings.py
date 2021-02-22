@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'waterworks',
     'crispy_forms',
+    'qr_code',
 ]
 
 MIDDLEWARE = [

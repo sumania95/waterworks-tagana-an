@@ -103,6 +103,7 @@ class Reading_Period(models.Model):
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
+
     class Meta:
         ordering = ['month']
 
@@ -122,7 +123,7 @@ class Meter_Installation(models.Model):
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
-class Replace_Water_Meter(models.Model):
+class Meter_Replace(models.Model):
     user                    = models.ForeignKey(User, on_delete=models.CASCADE)
     profile                 = models.OneToOneField(Profile, on_delete = models.CASCADE)
     meter_no                = models.CharField(max_length = 200)
@@ -144,6 +145,10 @@ class Reading(models.Model):
     water_meter_charge      = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
+
+    @property
+    def consumption(self):
+        return int(present_reading) - int(previous_reading)
 
 class Permanently_Disconnected(models.Model):
     user                    = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -205,11 +210,9 @@ class Collection_Charges_Cancelled(models.Model):
     date_created            = models.DateTimeField(auto_now_add = True)
 
 logs = (
-    ('1', 'Account added',),
-    ('2', 'Information Changed',),
-    ('3', 'Intalled Water Meter',),
-    ('4', 'Change Info Water Meter',),
-    ('5', 'Replace Water Meter',),
+    ('1', 'Information Changed',),
+    ('2', 'Intalled Water Meter',),
+    ('3', 'Replace Water Meter',),
 )
 
 class Activity_Logs(models.Model):

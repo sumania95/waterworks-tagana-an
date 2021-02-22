@@ -1,0 +1,110 @@
+{% extends 'waterworks/base.html' %}
+{% load static %}
+{% block 'link' %}
+  <style>
+    .tabbable-panel #tabs{
+        background: #007b5e;
+        color: #eee;
+    }
+    .tabbable-panel #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+        color: #0062cc;
+        background-color: transparent;
+        border-color: transparent transparent #f3f3f3;
+        border-bottom: 3px solid !important;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .tabbable-panel .nav-link {
+        border: 1px solid transparent;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+        color: #0062cc;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .tabbable-panel .nav-link:hover {
+        border: none;
+    }
+    .tabbable-panel thead{
+        background: #f3f3f3;
+        color: #333;
+    }
+    .tabbable-panel a{
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+    }
+  </style>
+{% endblock %}
+{% block 'content' %}
+<div class="col-md-12">
+  <h5>Settings</h5>
+  <hr>
+
+</div>
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body p-2">
+      <!-- Nav tabs -->
+      <div class="tabbable-panel">
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">User Activity</a>
+                <div class="slide"></div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Profile Activity</a>
+                <div class="slide"></div>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content card-block">
+            <div class="tab-pane active" id="home3" role="tabpanel">
+                <p class="m-0">1. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
+            </div>
+            <div class="tab-pane" id="profile3" role="tabpanel">
+                <p class="m-0">2.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+            </div>
+            <div class="tab-pane" id="messages3" role="tabpanel">
+                <p class="m-0">3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
+            </div>
+            <div class="tab-pane" id="settings3" role="tabpanel">
+                <p class="m-0">4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block 'script' %}
+<script>
+  function filterload(){
+    var filter = $("#filter").val();
+    var search = $("#search").val();
+
+    $.ajax({
+      url: '#',
+      type: 'get',
+      data: {filter:filter,search:search},
+      dataType: 'json',
+      success:function(data){
+        $('#counter').html(data.counter + " record(s) found");
+        $('#table-profile-ajax').html(data.profile_table);
+      },
+    });
+
+  };
+
+  $('#filter').change(function() {
+    filterload();
+  });
+  $('#search').change(function() {
+    filterload();
+  });
+  filterload();
+</script>
+
+{% endblock %}

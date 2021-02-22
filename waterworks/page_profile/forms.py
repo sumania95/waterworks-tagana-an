@@ -4,6 +4,7 @@ from waterworks.models import (
     Profile,
     Barangay,
     Meter_Installation,
+    Meter_Replace,
 )
 
 class ProfileForm(forms.ModelForm):
@@ -26,4 +27,13 @@ class Meter_InstallationForm(forms.ModelForm):
         fields = [
             'meter_no',
             'reading',
+        ]
+
+class Meter_ReplaceForm(forms.ModelForm):
+    class Meta:
+        model = Meter_Replace
+        fields = [
+            'meter_no',
+            'reading',
+            'reason',
         ]

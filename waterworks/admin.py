@@ -9,7 +9,7 @@ from .models import (
     Profile,
     Reading_Period,
     Meter_Installation,
-    Replace_Water_Meter,
+    Meter_Replace,
     Reading,
     Permanently_Disconnected,
     Modification_Charges,
@@ -26,7 +26,7 @@ admin.site.register(Year)
 admin.site.register(Profile)
 admin.site.register(Reading_Period)
 admin.site.register(Meter_Installation)
-admin.site.register(Replace_Water_Meter)
+admin.site.register(Meter_Replace)
 admin.site.register(Reading)
 admin.site.register(Permanently_Disconnected)
 admin.site.register(Modification_Charges)

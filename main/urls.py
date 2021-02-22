@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     path('',include('waterworks.urls')),
     path('admin/', admin.site.urls),
+    path('qr_code/', include('qr_code.urls', namespace="qr_code")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

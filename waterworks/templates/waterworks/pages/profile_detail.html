@@ -1,5 +1,6 @@
 {% extends 'waterworks/base.html' %}
 {% load static %}
+{% load qr_code %}
 {% block 'profile_active' %}active{% endblock %}
 {% block 'link' %}
   <style>
@@ -39,18 +40,19 @@
 {% endblock %}
 {% block 'content' %}
 <div class="col-md-12">
-  <h5>Profile Overview</h5>
+  <h5>{{object.name|upper}}</h5>
   <hr>
 </div>
 <div class="col-md-3">
   <div class="card">
     <div class="card-body">
       <div class="text-center">
-        <img class="border border-success rounded-circle img-radius wid-130 hig-130" src="{% static 'user_images/user_male.png' %}" width="130px" height="130px" alt="User-Profile-Image">
+        <!-- <img class="border border-success rounded-circle img-radius wid-130 hig-130" src="{% static 'user_images/user_male.png' %}" width="130px" height="130px" alt="User-Profile-Image"> -->
+        {% qr_from_text object.name size="S" %}
       </div>
       <hr>
       <div class="text-center">
-        {{object.name|upper}}<br>
+        <!-- {{object.name|upper}}<br> -->
         {% if object.meter_installation.status == '1' %}
           {{object.meter_installation.meter_no}}<a href="#"><i class="feather icon-edit ml-2"></i></a>
         {% elif object.meter_installation.status == '2' %}
@@ -72,12 +74,12 @@
         <hr>
         <a href="{% url 'waterworks_profile_update' object.id %}" type="button" class="btn btn-block btn-warning btn-sm" name="button">Update Info</a>
         {% if object.meter_installation.status == '1' %}
-          <button type="button" class="btn btn-block btn-success btn-sm" name="button">Replace Meter</button>
+          <a href="{% url 'waterworks_profile_meter_replace_create' object.id %}" type="button" class="btn btn-block btn-success btn-sm" name="button">Replace Meter</a>
           <button type="button" class="btn btn-block btn-info btn-sm" name="button">Change Status</button>
         {% elif object.meter_installation.status == '2' %}
-          <button type="button" class="btn btn-block btn-info btn-sm" name="button">Change Status</button>
+          <button type="button" class="btn btn-block btn-info btn-sm" name="button">Change to active</button>
         {% elif object.permanently_disconnected %}
-          <button type="button" class="btn btn-block btn-success btn-sm" name="button">Install Meter</button>
+          <a href="{% url 'waterworks_profile_meter_installation_create' object.id %}" type="button" class="btn btn-block btn-success btn-sm" name="button">Install Meter</a>
         {% else %}
           <a href="{% url 'waterworks_profile_meter_installation_create' object.id %}" type="button" class="btn btn-block btn-success btn-sm" name="button">Install Meter</a>
         {% endif %}
@@ -92,15 +94,19 @@
       <div class="tabbable-panel">
         <ul class="nav nav-tabs nav-justified" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Reading</a>
+                <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Overview</a>
                 <div class="slide"></div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Collection</a>
+                <a class="nav-link" data-toggle="tab" href="#reading" role="tab">Reading</a>
                 <div class="slide"></div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#messages3" role="tab">Activity</a>
+                <a class="nav-link" data-toggle="tab" href="#collection" role="tab">Collection</a>
+                <div class="slide"></div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#activity" role="tab">Activity</a>
                 <div class="slide"></div>
             </li>
             <!-- <li class="nav-item">
@@ -110,17 +116,17 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content card-block">
-            <div class="tab-pane active" id="home3" role="tabpanel">
-                <p class="m-0">1. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
+            <div class="tab-pane active" id="overview" role="tabpanel">
+
             </div>
-            <div class="tab-pane" id="profile3" role="tabpanel">
-                <p class="m-0">2.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+            <div class="tab-pane" id="reading" role="tabpanel">
+
             </div>
-            <div class="tab-pane" id="messages3" role="tabpanel">
-                <p class="m-0">3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
+            <div class="tab-pane" id="collection" role="tabpanel">
+
             </div>
-            <div class="tab-pane" id="settings3" role="tabpanel">
-                <p class="m-0">4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+            <div class="tab-pane" id="activity" role="tabpanel">
+
             </div>
         </div>
       </div>
@@ -134,6 +140,46 @@
 
 {% block 'script' %}
 <script>
+  $(document).ready(function () {
+    $.ajax({
+      url: '{% url 'waterworks_profile_detail_overview_api' object.id %}',
+      type: 'get',
+      dataType: 'json',
+      success:function(data){
+        $('#overview').html(data.html_form);
+      },
+    });
+  });
+  $(document).ready(function () {
+    $.ajax({
+      url: '{% url 'waterworks_profile_detail_reading_api' object.id %}',
+      type: 'get',
+      dataType: 'json',
+      success:function(data){
+        $('#reading').html(data.html_form);
+      },
+    });
+  });
+  $(document).ready(function () {
+    $.ajax({
+      url: '{% url 'waterworks_profile_detail_collection_api' object.id %}',
+      type: 'get',
+      dataType: 'json',
+      success:function(data){
+        $('#collection').html(data.html_form);
+      },
+    });
+  });
+  $(document).ready(function () {
+    $.ajax({
+      url: '{% url 'waterworks_profile_detail_activity_api' object.id %}',
+      type: 'get',
+      dataType: 'json',
+      success:function(data){
+        $('#activity').html(data.html_form);
+      },
+    });
+  });
 </script>
 
 {% endblock %}

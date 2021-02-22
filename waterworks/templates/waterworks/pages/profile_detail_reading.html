@@ -1,0 +1,89 @@
+<div class="card-header p-3">
+  <table>
+    <tr>
+      <td class="pl-2"><small id="reading_counter"></small></td>
+    </tr>
+  </table>
+  <div class="card-header-right">
+    <table>
+      <tr>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="card-body p-0">
+  <div class="table-responsive">
+    <table class="table border table-hover">
+      <thead>
+        <tr>
+          <th width="5%">#</th>
+          <th>Descripton</th>
+          <th width="5%">cubic m.</th>
+          <th width="5%">Amount</th>
+          <th width="1%"></th>
+        </tr>
+      </thead>
+      <tbody id="reading_table">
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card-footer p-1 m-0 text-center">
+  <ul class="pagination">
+    <li class="page-item" id="reading_page_prev"><button class="page-link" id="reading_button_prev" href="#!">Prev</button></li>
+    <li class="page-item" id="reading_page_next"><button class="page-link" id="reading_button_next" href="#!">Next</button></li>
+  </ul>
+</div>
+
+{% block 'script' %}
+<script>
+  var reading_start = 0;
+  var reading_end = 10;
+  var reading_counts;
+  function disabled(){
+    if (reading_start === 0){
+      $("#reading_page_prev").addClass("disabled", true);
+    }else{
+      $("#reading_page_prev").removeClass("disabled", false);
+    }
+    if (reading_end >= reading_counts){
+      $("#reading_page_next").addClass("disabled", true);
+    }else{
+      $("#reading_page_next").removeClass("disabled", false);
+    }
+  }
+  function load_data(reading_start,reading_end){
+    var search = $("#reading_search").val();
+    $.ajax({
+      url: '{% url 'waterworks_profile_detail_reading_table_api' pk %}',
+      type: 'get',
+      data: {start:reading_start,end:reading_end,search:search},
+      dataType: 'json',
+      success:function(data){
+        reading_counts = data.counter;
+        $('#reading_counter').html(data.counter + " record(s) found");
+        $('#reading_table').html(data.reading);
+        disabled();
+      },
+    });
+  };
+  $('#reading_button_prev').click(function() {
+    reading_start-=10
+    reading_end-=10
+    load_data(reading_start,reading_end);
+  });
+  $('#reading_button_next').click(function() {
+    reading_start+=10
+    reading_end+=10
+    load_data(reading_start,reading_end);
+  });
+  $('#reading_search').change(function() {
+    reading_start = 0;
+    reading_end = 10;
+    load_data(reading_start,reading_end);
+  });
+  load_data(reading_start,reading_end);
+</script>
+
+{% endblock %}

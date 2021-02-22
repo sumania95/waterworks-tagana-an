@@ -53,10 +53,13 @@
           <a href="{% url 'waterworks_year' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Year</span></a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-printer"></i></span><span class="pcoded-mtext">Reports</span></a>
+          <a href="{% url 'waterworks_settings' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-settings"></i></span><span class="pcoded-mtext">Settings</span></a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-activity"></i></span><span class="pcoded-mtext">Audit Trail</span></a>
+          <a href="{% url 'waterworks_reports' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-printer"></i></span><span class="pcoded-mtext">Reports</span></a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'waterworks_audit_trails' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-activity"></i></span><span class="pcoded-mtext">Audit Trail</span></a>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-log-out text-danger"></i></span><span class="pcoded-mtext">Sign Out</span></a>

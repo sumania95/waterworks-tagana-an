@@ -1,0 +1,90 @@
+<div class="card-header p-3">
+  <table>
+    <tr>
+      <td class="pl-2"><small id="collection_counter"></small></td>
+    </tr>
+  </table>
+  <div class="card-header-right">
+    <table>
+      <tr>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="card-body p-0">
+  <div class="table-responsive">
+    <table class="table border table-hover">
+      <thead>
+        <tr>
+          <th width="5%">#</th>
+          <th>OR Number</th>
+          <th>Type</th>
+          <th width="5%">Amount</th>
+          <th width="5%">Date</th>
+          <th width="10%">User</th>
+        </tr>
+      </thead>
+      <tbody id="collection_table">
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card-footer p-1 m-0 text-center">
+  <ul class="pagination">
+    <li class="page-item" id="collection_page_prev"><button class="page-link" id="collection_button_prev" href="#!">Prev</button></li>
+    <li class="page-item" id="collection_page_next"><button class="page-link" id="collection_button_next" href="#!">Next</button></li>
+  </ul>
+</div>
+
+{% block 'script' %}
+<script>
+  var collection_start = 0;
+  var collection_end = 10;
+  var collection_counts;
+  function collection_disabled(){
+    if (collection_start === 0){
+      $("#collection_page_prev").addClass("disabled", true);
+    }else{
+      $("#collection_page_prev").removeClass("disabled", false);
+    }
+    if (collection_end >= collection_counts){
+      $("#collection_page_next").addClass("disabled", true);
+    }else{
+      $("#collection_page_next").removeClass("disabled", false);
+    }
+  }
+  function collection_load_data(collection_start,collection_end){
+    var search = $("#collection_search").val();
+    $.ajax({
+      url: '{% url 'waterworks_profile_detail_collection_table_api' pk %}',
+      type: 'get',
+      data: {start:collection_start,end:collection_end,search:search},
+      dataType: 'json',
+      success:function(data){
+        collection_counts = data.counter;
+        $('#collection_counter').html(data.counter + " record(s) found");
+        $('#collection_table').html(data.collection);
+        collection_disabled();
+      },
+    });
+  };
+  $('#collection_button_prev').click(function() {
+    collection_start-=10
+    collection_end-=10
+    collection_load_data(collection_start,collection_end);
+  });
+  $('#collection_button_next').click(function() {
+    collection_start+=10
+    collection_end+=10
+    collection_load_data(collection_start,collection_end);
+  });
+  $('#collection_search').change(function() {
+    collection_start = 0;
+    collection_end = 10;
+    collection_load_data(collection_start,collection_end);
+  });
+  collection_load_data(collection_start,collection_end);
+</script>
+
+{% endblock %}

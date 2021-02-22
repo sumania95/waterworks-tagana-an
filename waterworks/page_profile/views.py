@@ -21,10 +21,13 @@ from waterworks.models import (
     Profile,
     Reading_Period,
     Meter_Installation,
+    Meter_Replace,
+    Activity_Logs,
 )
 from .forms import (
     ProfileForm,
     Meter_InstallationForm,
+    Meter_ReplaceForm
 )
 success = 'success'
 info = 'info'
@@ -35,10 +38,6 @@ from django.utils import timezone
 
 class Waterworks_Profile(TemplateView):
     template_name = 'waterworks/pages/profile.html'
-
-class Waterworks_Profile_Detail(DetailView):
-    model = Profile
-    template_name = 'waterworks/pages/profile_detail.html'
 
 class Waterworks_Profile_Create(TemplateView):
     template_name = 'waterworks/components/profile_create.html'
@@ -111,6 +110,7 @@ class Waterworks_Profile_Update_Save_AJAXView(View):
         if request.method == 'POST':
             form = ProfileForm(request.POST,request.FILES,instance=profile)
             if form.is_valid():
+                Activity_Logs.objects.create(user=self.request.user,profile=profile,logs = 1)
                 form.save()
                 data['message_type'] = success
                 data['message_title'] = 'Successfully updated.'
@@ -169,12 +169,69 @@ class Waterworks_Profile_Meter_Installation_Create_Save_AJAXView(View):
                     form.instance.user = self.request.user
                     form.instance.status = 1
                     form.instance.date_reading = timezone.now()
+                    Activity_Logs.objects.create(user=self.request.user,profile=profile,logs = 2)
                     form.save()
                     data['message_type'] = success
                     data['message_title'] = 'Successfully updated.'
                     data['url'] = reverse('waterworks_profile_detail',kwargs={'pk':profile.id})
         return JsonResponse(data)
 
+# replace
+class Waterworks_Profile_Meter_Replace_Create(TemplateView):
+    template_name = 'waterworks/components/meter_replace_create.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Replace Water Meter"
+        try:
+            id = self.kwargs['pk']
+            context['profile'] = Profile.objects.get(id = id)
+        except Exception as e:
+            pass
+        return context
+class Waterworks_Profile_Meter_Replace_Create_AJAXView(View):
+    template_name = 'waterworks/forms/meter_replace_forms.html'
+    def get(self, request):
+        data = dict()
+        try:
+            id = self.request.GET.get('id')
+        except KeyError:
+            id = None
+        profile = Profile.objects.get(pk=id)
+        form = Meter_ReplaceForm()
+        context = {
+            'form': form,
+            'profile': profile,
+            'is_Create': True,
+            'btn_name': "primary",
+            'btn_title': "Submit",
+        }
+        data['html_form'] = render_to_string(self.template_name,context)
+        return JsonResponse(data)
+
+class Waterworks_Profile_Meter_Replace_Create_Save_AJAXView(View):
+    def post(self, request,pk):
+        data = dict()
+        profile = Profile.objects.get(pk=pk)
+        if request.method == 'POST':
+            form = Meter_ReplaceForm(request.POST,request.FILES)
+            if form.is_valid():
+                meter_exists = Meter_Installation.objects.filter(meter_no=form.instance.meter_no).exists()
+                if meter_exists:
+                    data['message_type'] = warning
+                    data['message_title'] = 'Duplicated Meter Number.'
+                else:
+                    form.instance.profile = profile
+                    form.instance.user = self.request.user
+                    Activity_Logs.objects.create(user=self.request.user,profile=profile,logs = 3)
+                    Meter_Installation.objects.filter(profile=profile).update(meter_no=form.instance.meter_no,reading=form.instance.reading,date_reading=timezone.now())
+                    form.save()
+                    data['message_type'] = success
+                    data['message_title'] = 'Successfully updated.'
+                    data['url'] = reverse('waterworks_profile_detail',kwargs={'pk':profile.id})
+        return JsonResponse(data)
+
+# table profile
 class Waterworks_Profile_Table_AJAXView(View):
     queryset = Profile.objects.all()
     template_name = 'waterworks/tables/profile_table.html'
@@ -191,6 +248,6 @@ class Waterworks_Profile_Table_AJAXView(View):
         if search or start or end:
             data['form_is_valid'] = True
             data['counter'] = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains = search)).count()
-            profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains = search)).order_by('firstname')[int(start):int(end)]
+            profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains = search)).order_by('surname','firstname')[int(start):int(end)]
             data['profile'] = render_to_string(self.template_name,{'profile':profile,'start':start})
         return JsonResponse(data)

@@ -1,0 +1,18 @@
+{% for p in activity %}
+<tr>
+  <td>{{forloop.counter|add:start}}</td>
+  <td>
+    {{p.get_logs_display}}
+  </td>
+  <td>
+    {{p.date_created}}
+  </td>
+  <td>
+    {{p.user}}
+  </td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="12" class="text-center">No data available</td>
+</tr>
+{% endfor %}

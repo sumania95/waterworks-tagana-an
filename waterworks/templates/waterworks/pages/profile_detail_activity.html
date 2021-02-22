@@ -1,0 +1,88 @@
+<div class="card-header p-3">
+  <table>
+    <tr>
+      <td class="pl-2"><small id="activity_counter"></small></td>
+    </tr>
+  </table>
+  <div class="card-header-right">
+    <table>
+      <tr>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="card-body p-0">
+  <div class="table-responsive">
+    <table class="table border table-hover">
+      <thead>
+        <tr>
+          <th width="5%">#</th>
+          <th>Logs</th>
+          <th width="5%">Date</th>
+          <th width="10%">User</th>
+        </tr>
+      </thead>
+      <tbody id="activity_table">
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card-footer p-1 m-0 text-center">
+  <ul class="pagination">
+    <li class="page-item" id="activity_page_prev"><button class="page-link" id="activity_button_prev" href="#!">Prev</button></li>
+    <li class="page-item" id="activity_page_next"><button class="page-link" id="activity_button_next" href="#!">Next</button></li>
+  </ul>
+</div>
+
+{% block 'script' %}
+<script>
+  var activity_start = 0;
+  var activity_end = 10;
+  var activity_counts;
+  function activity_disabled(){
+    if (activity_start === 0){
+      $("#activity_page_prev").addClass("disabled", true);
+    }else{
+      $("#activity_page_prev").removeClass("disabled", false);
+    }
+    if (activity_end >= activity_counts){
+      $("#activity_page_next").addClass("disabled", true);
+    }else{
+      $("#activity_page_next").removeClass("disabled", false);
+    }
+  }
+  function activity_load_data(activity_start,activity_end){
+    var search = $("#activity_search").val();
+    $.ajax({
+      url: '{% url 'waterworks_profile_detail_activity_table_api' pk %}',
+      type: 'get',
+      data: {start:activity_start,end:activity_end,search:search},
+      dataType: 'json',
+      success:function(data){
+        activity_counts = data.counter;
+        $('#activity_counter').html(data.counter + " record(s) found");
+        $('#activity_table').html(data.activity);
+        activity_disabled();
+      },
+    });
+  };
+  $('#activity_button_prev').click(function() {
+    activity_start-=10
+    activity_end-=10
+    activity_load_data(activity_start,activity_end);
+  });
+  $('#activity_button_next').click(function() {
+    activity_start+=10
+    activity_end+=10
+    activity_load_data(activity_start,activity_end);
+  });
+  $('#activity_search').change(function() {
+    activity_start = 0;
+    activity_end = 10;
+    activity_load_data(activity_start,activity_end);
+  });
+  activity_load_data(activity_start,activity_end);
+</script>
+
+{% endblock %}

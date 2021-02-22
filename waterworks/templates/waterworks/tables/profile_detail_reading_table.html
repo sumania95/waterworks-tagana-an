@@ -1,0 +1,24 @@
+{% for p in reading %}
+<tr>
+  <td>{{forloop.counter|add:start}}</td>
+  <td>
+    {{p.reading_period.get_month_display|upper}} {{p.reading_period.year.name}}
+  </td>
+  <td>
+    {{p.consumption}}
+  </td>
+  <td>
+    {{p.amount}}
+  </td>
+  <td>
+    <a href="{% url 'waterworks_barangay_update' p.id %}" class="btn btn-warning btn-sm rounded-circle" name="button"><i class="feather icon-edit"></i></a>
+    {% if p.is_active %}
+    <a href="#" class="btn btn-secondary btn-sm rounded-circle" name="button"><i class="feather icon-printer"></i></a>
+    {% endif %}
+  </td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="12" class="text-center">No data available</td>
+</tr>
+{% endfor %}

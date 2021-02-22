@@ -6,10 +6,11 @@
   </td>
   <td>
     {% if p.is_active %}
-      <span class="badge badge-success">Activated</span>
+      <!-- <span class="badge badge-success">Activated</span> -->
+      <button type="button" class="btn btn-success btn-sm rounded-circle" disabled name="button"><i class="feather icon-check"></i></button>
     {% else %}
       <form class="custom-form" data-url="{% url 'waterworks_year_activate_api' p.id %}" method="post">
-        <button type="submit" class="btn btn-secondary btn-sm confirm-activate" name="button">Activate</button>
+        <button type="submit" class="btn btn-secondary btn-sm confirm-activate rounded-circle" name="button"><i class="feather icon-check"></i></button>
       </form>
     {% endif %}
   </td>
