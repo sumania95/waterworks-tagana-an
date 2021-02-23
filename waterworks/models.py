@@ -6,6 +6,9 @@ from datetime import datetime
 from django.utils import timezone
 
 class Account(models.Model):
+    user                    = models.OneToOneField(User, on_delete = models.CASCADE)
+    surname                 = models.CharField(max_length = 200)
+    firstname               = models.CharField(max_length = 200)
     middlename              = models.CharField(max_length = 200,blank=True)
     is_admin                = models.BooleanField(default=False)
     is_waterworks_clerk     = models.BooleanField(default=False)
@@ -125,7 +128,9 @@ class Meter_Installation(models.Model):
 
 class Meter_Replace(models.Model):
     user                    = models.ForeignKey(User, on_delete=models.CASCADE)
-    profile                 = models.OneToOneField(Profile, on_delete = models.CASCADE)
+    profile                 = models.ForeignKey(Profile, on_delete = models.CASCADE)
+    old_meter_no            = models.CharField(max_length = 200,blank=True)
+    old_reading             = models.IntegerField(default=0)
     meter_no                = models.CharField(max_length = 200)
     reading                 = models.IntegerField(default=0)
     reason                  = models.CharField(max_length = 200)

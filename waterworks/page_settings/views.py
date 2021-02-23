@@ -22,5 +22,5 @@ error = 'error'
 warning = 'warning'
 question = 'question'
 
-class Waterworks_Settings(TemplateView):
+class Waterworks_Settings(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/settings.html'

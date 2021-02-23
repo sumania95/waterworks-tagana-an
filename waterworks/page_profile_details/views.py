@@ -31,11 +31,11 @@ warning = 'warning'
 question = 'question'
 from django.utils import timezone
 
-class Waterworks_Profile_Detail(DetailView):
+class Waterworks_Profile_Detail(LoginRequiredMixin,DetailView):
     model = Profile
     template_name = 'waterworks/pages/profile_detail.html'
 
-class Waterworks_Profile_Detail_Overview_AJAXView(View):
+class Waterworks_Profile_Detail_Overview_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/pages/profile_detail_overview.html'
     def get(self, request,pk):
         data = dict()
@@ -45,7 +45,7 @@ class Waterworks_Profile_Detail_Overview_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Profile_Detail_Reading_AJAXView(View):
+class Waterworks_Profile_Detail_Reading_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/pages/profile_detail_reading.html'
     def get(self, request,pk):
         data = dict()
@@ -55,7 +55,7 @@ class Waterworks_Profile_Detail_Reading_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Profile_Detail_Reading_Table_AJAXView(View):
+class Waterworks_Profile_Detail_Reading_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Reading.objects.all()
     template_name = 'waterworks/tables/profile_detail_reading_table.html'
     def get(self, request,pk):
@@ -73,7 +73,7 @@ class Waterworks_Profile_Detail_Reading_Table_AJAXView(View):
             data['reading'] = render_to_string(self.template_name,{'reading':barangay,'start':start})
         return JsonResponse(data)
 
-class Waterworks_Profile_Detail_Collection_AJAXView(View):
+class Waterworks_Profile_Detail_Collection_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/pages/profile_detail_collection.html'
     def get(self, request,pk):
         data = dict()
@@ -83,7 +83,7 @@ class Waterworks_Profile_Detail_Collection_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Profile_Detail_Collection_Table_AJAXView(View):
+class Waterworks_Profile_Detail_Collection_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Collection_Charges.objects.all()
     template_name = 'waterworks/tables/profile_detail_collection_table.html'
     def get(self, request,pk):
@@ -101,7 +101,7 @@ class Waterworks_Profile_Detail_Collection_Table_AJAXView(View):
             data['collection'] = render_to_string(self.template_name,{'collection':collection,'start':start})
         return JsonResponse(data)
 
-class Waterworks_Profile_Detail_Activity_AJAXView(View):
+class Waterworks_Profile_Detail_Activity_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/pages/profile_detail_activity.html'
     def get(self, request,pk):
         data = dict()
@@ -111,7 +111,7 @@ class Waterworks_Profile_Detail_Activity_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Profile_Detail_Activity_Table_AJAXView(View):
+class Waterworks_Profile_Detail_Activity_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Activity_Logs.objects.all()
     template_name = 'waterworks/tables/profile_detail_activity_table.html'
     def get(self, request,pk):

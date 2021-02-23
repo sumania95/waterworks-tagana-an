@@ -22,5 +22,5 @@ error = 'error'
 warning = 'warning'
 question = 'question'
 
-class Waterworks_Audit_Trails(TemplateView):
+class Waterworks_Audit_Trails(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/audit_trails.html'

@@ -23,7 +23,7 @@ error = 'error'
 warning = 'warning'
 question = 'question'
 
-class Waterworks_Reading(TemplateView):
+class Waterworks_Reading(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/reading.html'
 
     def get_context_data(self, **kwargs):
@@ -31,7 +31,7 @@ class Waterworks_Reading(TemplateView):
         context['barangay'] = Barangay.objects.filter(is_active=True)
         return context
 
-class Waterworks_Reading_Table_AJAXView(View):
+class Waterworks_Reading_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Profile.objects.all()
     template_name = 'waterworks/tables/reading_table.html'
     def get(self, request):

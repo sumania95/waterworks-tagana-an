@@ -20,10 +20,10 @@ error = 'error'
 warning = 'warning'
 question = 'question'
 
-class Waterworks_Barangay(TemplateView):
+class Waterworks_Barangay(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/barangay.html'
 
-class Waterworks_Barangay_Create(TemplateView):
+class Waterworks_Barangay_Create(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/barangay_create.html'
 
     def get_context_data(self, **kwargs):
@@ -31,7 +31,7 @@ class Waterworks_Barangay_Create(TemplateView):
         context['title'] = "New Barangay"
         return context
 
-class Waterworks_Barangay_Create_AJAXView(View):
+class Waterworks_Barangay_Create_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/barangay_forms.html'
     def get(self, request):
         data = dict()
@@ -54,7 +54,7 @@ class Waterworks_Barangay_Create_AJAXView(View):
                 data['message_title'] = 'Successfully saved.'
         return JsonResponse(data)
 
-class Waterworks_Barangay_Update(TemplateView):
+class Waterworks_Barangay_Update(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/barangay_update.html'
 
     def get_context_data(self, **kwargs):
@@ -67,7 +67,7 @@ class Waterworks_Barangay_Update(TemplateView):
         context['title'] = "Update Barangay"
         return context
 
-class Waterworks_Barangay_Update_AJAXView(View):
+class Waterworks_Barangay_Update_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/barangay_forms.html'
     def get(self, request):
         data = dict()
@@ -87,7 +87,7 @@ class Waterworks_Barangay_Update_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Barangay_Update_Save_AJAXView(View):
+class Waterworks_Barangay_Update_Save_AJAXView(LoginRequiredMixin,View):
     def post(self, request,pk):
         data = dict()
         barangay = Barangay.objects.get(pk=pk)
@@ -99,7 +99,7 @@ class Waterworks_Barangay_Update_Save_AJAXView(View):
                 data['message_title'] = 'Successfully updated.'
         return JsonResponse(data)
 
-class Waterworks_Barangay_Table_AJAXView(View):
+class Waterworks_Barangay_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Barangay.objects.all()
     template_name = 'waterworks/tables/barangay_table.html'
     def get(self, request):
@@ -115,6 +115,6 @@ class Waterworks_Barangay_Table_AJAXView(View):
         if search or start or end:
             data['form_is_valid'] = True
             data['counter'] = self.queryset.filter(name__icontains = search).count()
-            barangay = self.queryset.filter(name__icontains = search).order_by('name')[int(start):int(end)]
+            barangay = self.queryset.filter(name__icontains = search).order_by('is_active','name')[int(start):int(end)]
             data['barangay'] = render_to_string(self.template_name,{'barangay':barangay,'start':start})
         return JsonResponse(data)

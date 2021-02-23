@@ -36,10 +36,10 @@ warning = 'warning'
 question = 'question'
 from django.utils import timezone
 
-class Waterworks_Profile(TemplateView):
+class Waterworks_Profile(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/profile.html'
 
-class Waterworks_Profile_Create(TemplateView):
+class Waterworks_Profile_Create(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/profile_create.html'
 
     def get_context_data(self, **kwargs):
@@ -47,7 +47,7 @@ class Waterworks_Profile_Create(TemplateView):
         context['title'] = "New Profile"
         return context
 
-class Waterworks_Profile_Create_AJAXView(View):
+class Waterworks_Profile_Create_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/profile_forms.html'
     def get(self, request):
         data = dict()
@@ -70,7 +70,7 @@ class Waterworks_Profile_Create_AJAXView(View):
                 data['message_title'] = 'Successfully saved.'
         return JsonResponse(data)
 
-class Waterworks_Profile_Update(TemplateView):
+class Waterworks_Profile_Update(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/profile_update.html'
 
     def get_context_data(self, **kwargs):
@@ -83,7 +83,7 @@ class Waterworks_Profile_Update(TemplateView):
         context['title'] = "Update Profile"
         return context
 
-class Waterworks_Profile_Update_AJAXView(View):
+class Waterworks_Profile_Update_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/profile_forms.html'
     def get(self, request):
         data = dict()
@@ -103,7 +103,7 @@ class Waterworks_Profile_Update_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Profile_Update_Save_AJAXView(View):
+class Waterworks_Profile_Update_Save_AJAXView(LoginRequiredMixin,View):
     def post(self, request,pk):
         data = dict()
         profile = Profile.objects.get(pk=pk)
@@ -118,7 +118,7 @@ class Waterworks_Profile_Update_Save_AJAXView(View):
         return JsonResponse(data)
 
 # meter installation
-class Waterworks_Profile_Meter_Installation_Create(TemplateView):
+class Waterworks_Profile_Meter_Installation_Create(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/meter_installation_create.html'
 
     def get_context_data(self, **kwargs):
@@ -131,7 +131,7 @@ class Waterworks_Profile_Meter_Installation_Create(TemplateView):
             pass
         return context
 
-class Waterworks_Profile_Meter_Installation_Create_AJAXView(View):
+class Waterworks_Profile_Meter_Installation_Create_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/meter_installation_forms.html'
     def get(self, request):
         data = dict()
@@ -151,7 +151,7 @@ class Waterworks_Profile_Meter_Installation_Create_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Profile_Meter_Installation_Create_Save_AJAXView(View):
+class Waterworks_Profile_Meter_Installation_Create_Save_AJAXView(LoginRequiredMixin,View):
     def post(self, request,pk):
         data = dict()
         profile = Profile.objects.get(pk=pk)
@@ -177,7 +177,7 @@ class Waterworks_Profile_Meter_Installation_Create_Save_AJAXView(View):
         return JsonResponse(data)
 
 # replace
-class Waterworks_Profile_Meter_Replace_Create(TemplateView):
+class Waterworks_Profile_Meter_Replace_Create(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/meter_replace_create.html'
 
     def get_context_data(self, **kwargs):
@@ -189,7 +189,7 @@ class Waterworks_Profile_Meter_Replace_Create(TemplateView):
         except Exception as e:
             pass
         return context
-class Waterworks_Profile_Meter_Replace_Create_AJAXView(View):
+class Waterworks_Profile_Meter_Replace_Create_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/meter_replace_forms.html'
     def get(self, request):
         data = dict()
@@ -209,10 +209,11 @@ class Waterworks_Profile_Meter_Replace_Create_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Profile_Meter_Replace_Create_Save_AJAXView(View):
+class Waterworks_Profile_Meter_Replace_Create_Save_AJAXView(LoginRequiredMixin,View):
     def post(self, request,pk):
         data = dict()
         profile = Profile.objects.get(pk=pk)
+        meter_installation = Meter_Installation.objects.get(profile_id=pk)
         if request.method == 'POST':
             form = Meter_ReplaceForm(request.POST,request.FILES)
             if form.is_valid():
@@ -222,6 +223,8 @@ class Waterworks_Profile_Meter_Replace_Create_Save_AJAXView(View):
                     data['message_title'] = 'Duplicated Meter Number.'
                 else:
                     form.instance.profile = profile
+                    form.instance.old_meter_no = meter_installation.meter_no
+                    form.instance.old_reading = meter_installation.reading
                     form.instance.user = self.request.user
                     Activity_Logs.objects.create(user=self.request.user,profile=profile,logs = 3)
                     Meter_Installation.objects.filter(profile=profile).update(meter_no=form.instance.meter_no,reading=form.instance.reading,date_reading=timezone.now())
@@ -232,7 +235,7 @@ class Waterworks_Profile_Meter_Replace_Create_Save_AJAXView(View):
         return JsonResponse(data)
 
 # table profile
-class Waterworks_Profile_Table_AJAXView(View):
+class Waterworks_Profile_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Profile.objects.all()
     template_name = 'waterworks/tables/profile_table.html'
     def get(self, request):

@@ -75,7 +75,8 @@
         <a href="{% url 'waterworks_profile_update' object.id %}" type="button" class="btn btn-block btn-warning btn-sm" name="button">Update Info</a>
         {% if object.meter_installation.status == '1' %}
           <a href="{% url 'waterworks_profile_meter_replace_create' object.id %}" type="button" class="btn btn-block btn-success btn-sm" name="button">Replace Meter</a>
-          <button type="button" class="btn btn-block btn-info btn-sm" name="button">Change Status</button>
+          <button type="button" class="btn btn-block btn-danger btn-sm" name="button">Change Disconnected</button>
+          <button type="button" class="btn btn-block btn-danger btn-sm" name="button">Change Condemn</button>
         {% elif object.meter_installation.status == '2' %}
           <button type="button" class="btn btn-block btn-info btn-sm" name="button">Change to active</button>
         {% elif object.permanently_disconnected %}

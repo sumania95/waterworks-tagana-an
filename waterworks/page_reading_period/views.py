@@ -24,10 +24,10 @@ error = 'error'
 warning = 'warning'
 question = 'question'
 
-class Waterworks_Reading_Period(TemplateView):
+class Waterworks_Reading_Period(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/reading_period.html'
 
-class Waterworks_Reading_Period_Create(TemplateView):
+class Waterworks_Reading_Period_Create(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/reading_period_create.html'
 
     def get_context_data(self, **kwargs):
@@ -35,7 +35,7 @@ class Waterworks_Reading_Period_Create(TemplateView):
         context['title'] = "New Reading Period"
         return context
 
-class Waterworks_Reading_Period_Create_AJAXView(View):
+class Waterworks_Reading_Period_Create_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/reading_period_forms.html'
     def get(self, request):
         data = dict()
@@ -68,7 +68,7 @@ class Waterworks_Reading_Period_Create_AJAXView(View):
                     data['url'] = reverse('waterworks_reading_period')
         return JsonResponse(data)
 
-class Waterworks_Reading_Period_Update(TemplateView):
+class Waterworks_Reading_Period_Update(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/reading_period_update.html'
 
     def get_context_data(self, **kwargs):
@@ -81,7 +81,7 @@ class Waterworks_Reading_Period_Update(TemplateView):
         context['title'] = "Update Reading Period"
         return context
 
-class Waterworks_Reading_Period_Update_AJAXView(View):
+class Waterworks_Reading_Period_Update_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/reading_period_forms.html'
     def get(self, request):
         data = dict()
@@ -101,7 +101,7 @@ class Waterworks_Reading_Period_Update_AJAXView(View):
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)
 
-class Waterworks_Reading_Period_Update_Save_AJAXView(View):
+class Waterworks_Reading_Period_Update_Save_AJAXView(LoginRequiredMixin,View):
     def post(self, request,pk):
         data = dict()
         reading_period = Reading_Period.objects.get(pk=pk)
@@ -113,7 +113,7 @@ class Waterworks_Reading_Period_Update_Save_AJAXView(View):
                 data['message_title'] = 'Successfully updated.'
         return JsonResponse(data)
 
-class Waterworks_Reading_Period_Table_AJAXView(View):
+class Waterworks_Reading_Period_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Reading_Period.objects.all()
     template_name = 'waterworks/tables/reading_period_table.html'
     def get(self, request):

@@ -24,10 +24,10 @@ error = 'error'
 warning = 'warning'
 question = 'question'
 
-class Waterworks_Year(TemplateView):
+class Waterworks_Year(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/year.html'
 
-class Waterworks_Year_Create(TemplateView):
+class Waterworks_Year_Create(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/components/year_create.html'
 
     def get_context_data(self, **kwargs):
@@ -35,7 +35,7 @@ class Waterworks_Year_Create(TemplateView):
         context['title'] = "New Year"
         return context
 
-class Waterworks_Year_Create_AJAXView(View):
+class Waterworks_Year_Create_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/forms/year_forms.html'
     def get(self, request):
         data = dict()
@@ -60,7 +60,7 @@ class Waterworks_Year_Create_AJAXView(View):
                 data['url'] = reverse('waterworks_year')
         return JsonResponse(data)
 
-class Waterworks_Year_Activate_AJAXView(View):
+class Waterworks_Year_Activate_AJAXView(LoginRequiredMixin,View):
     def post(self, request,pk):
         data = dict()
         try:
@@ -72,7 +72,7 @@ class Waterworks_Year_Activate_AJAXView(View):
             pass
         return JsonResponse(data)
 
-class Waterworks_Year_Table_AJAXView(View):
+class Waterworks_Year_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Year.objects.all()
     template_name = 'waterworks/tables/year_table.html'
     def get(self, request):
