@@ -1,0 +1,15 @@
+{% for p in reports %}
+<tr>
+  <td>{{forloop.counter|add:start}}</td>
+  <td>
+    {{p.name}}
+  </td>
+  <td>
+    <button type="button" class="btn btn-secondary btn-sm rounded-circle" name="button"><i class="feather icon-printer"></i></button>
+  </td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="12" class="text-center">No data available</td>
+</tr>
+{% endfor %}

@@ -1,41 +1,6 @@
 {% extends 'waterworks/base.html' %}
 {% load static %}
-{% block 'link' %}
-  <style>
-    .tabbable-panel #tabs{
-        background: #007b5e;
-        color: #eee;
-    }
-    .tabbable-panel #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-        color: #0062cc;
-        background-color: transparent;
-        border-color: transparent transparent #f3f3f3;
-        border-bottom: 3px solid !important;
-        font-size: 14px;
-        font-weight: bold;
-    }
-    .tabbable-panel .nav-link {
-        border: 1px solid transparent;
-        border-top-left-radius: .25rem;
-        border-top-right-radius: .25rem;
-        color: #0062cc;
-        font-size: 14px;
-        font-weight: 600;
-    }
-    .tabbable-panel .nav-link:hover {
-        border: none;
-    }
-    .tabbable-panel thead{
-        background: #f3f3f3;
-        color: #333;
-    }
-    .tabbable-panel a{
-        text-decoration: none;
-        color: #333;
-        font-weight: 600;
-    }
-  </style>
-{% endblock %}
+
 {% block 'content' %}
 <div class="col-md-12">
   <h5>Reports</h5>
@@ -44,35 +9,42 @@
 </div>
 <div class="col-md-12">
   <div class="card">
-    <div class="card-body p-2">
-      <!-- Nav tabs -->
-      <div class="tabbable-panel">
-        <ul class="nav nav-tabs nav-justified" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">User Activity</a>
-                <div class="slide"></div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Profile Activity</a>
-                <div class="slide"></div>
-            </li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content card-block">
-            <div class="tab-pane active" id="home3" role="tabpanel">
-                <p class="m-0">1. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
-            </div>
-            <div class="tab-pane" id="profile3" role="tabpanel">
-                <p class="m-0">2.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
-            </div>
-            <div class="tab-pane" id="messages3" role="tabpanel">
-                <p class="m-0">3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
-            </div>
-            <div class="tab-pane" id="settings3" role="tabpanel">
-                <p class="m-0">4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
-            </div>
-        </div>
+    <div class="card-header p-3">
+      <table>
+        <tr>
+          <td class="pl-2"><small id="counter"></small></td>
+        </tr>
+      </table>
+      <div class="card-header-right">
+        <table>
+          <tr>
+            <td>
+              <input type="search" class="form-control float-right mr-1" placeholder="Search...." name="search" id="search">
+            </td>
+          </tr>
+        </table>
       </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table border table-hover">
+          <thead>
+            <tr>
+              <th width="5%">#</th>
+              <th>Description</th>
+              <th width="1%"></th>
+            </tr>
+          </thead>
+          <tbody id="report_table">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer p-1 m-0 text-center">
+      <ul class="pagination">
+        <li class="page-item" id="page_prev"><button class="page-link" id="button_prev" href="#!">Prev</button></li>
+        <li class="page-item" id="page_next"><button class="page-link" id="button_next" href="#!">Next</button></li>
+      </ul>
     </div>
   </div>
 </div>
@@ -81,30 +53,52 @@
 
 {% block 'script' %}
 <script>
-  function filterload(){
-    var filter = $("#filter").val();
+  var start = 0;
+  var end = 10;
+  var counts;
+  function disabled(){
+    if (start === 0){
+      $("#page_prev").addClass("disabled", true);
+    }else{
+      $("#page_prev").removeClass("disabled", false);
+    }
+    if (end >= counts){
+      $("#page_next").addClass("disabled", true);
+    }else{
+      $("#page_next").removeClass("disabled", false);
+    }
+  }
+  function load_data(start,end){
     var search = $("#search").val();
-
     $.ajax({
-      url: '#',
+      url: '{% url 'waterworks_reports_table_api' %}',
       type: 'get',
-      data: {filter:filter,search:search},
+      data: {start:start,end:end,search:search},
       dataType: 'json',
       success:function(data){
+        counts = data.counter;
         $('#counter').html(data.counter + " record(s) found");
-        $('#table-profile-ajax').html(data.profile_table);
+        $('#report_table').html(data.reports);
+        disabled();
       },
     });
-
   };
-
-  $('#filter').change(function() {
-    filterload();
+  $('#button_prev').click(function() {
+    start-=10
+    end-=10
+    load_data(start,end);
+  });
+  $('#button_next').click(function() {
+    start+=10
+    end+=10
+    load_data(start,end);
   });
   $('#search').change(function() {
-    filterload();
+    start = 0;
+    end = 10;
+    load_data(start,end);
   });
-  filterload();
+  load_data(start,end);
 </script>
 
 {% endblock %}

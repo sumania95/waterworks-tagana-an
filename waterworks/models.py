@@ -5,6 +5,18 @@ from django.urls import reverse
 from datetime import datetime
 from django.utils import timezone
 
+class Reports(models.Model):
+    name                    = models.CharField(max_length = 200)
+    url_report              = models.CharField(max_length = 200)
+    date_updated            = models.DateTimeField(auto_now = True)
+    date_created            = models.DateTimeField(auto_now_add = True)
+
+class Settings(models.Model):
+    application_name        = models.CharField(max_length = 200)
+    address                 = models.CharField(max_length = 200)
+    date_updated            = models.DateTimeField(auto_now = True)
+    date_created            = models.DateTimeField(auto_now_add = True)
+
 class Account(models.Model):
     user                    = models.OneToOneField(User, on_delete = models.CASCADE)
     surname                 = models.CharField(max_length = 200)
@@ -52,12 +64,14 @@ class Classification_Rates(models.Model):
     classification          = models.ForeignKey(Classification, on_delete = models.CASCADE)
     name                    = models.CharField(max_length = 200)
     rate                    = models.IntegerField(default = 0)
+    blocking_rate           = models.IntegerField(default = 0)
     value_expression        = models.IntegerField(default = 0)
+    minimum                 = models.BooleanField(default=False)
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.classification)+" "+str(self.name)
 
 class Profile(models.Model):
     surname                 = models.CharField(max_length = 200)

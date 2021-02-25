@@ -1,12 +1,13 @@
 from django import forms
 from django.forms import ModelForm
 from waterworks.models import (
-    Year,
+    Settings,
 )
 
-class YearForm(forms.ModelForm):
+class SettingsForm(forms.ModelForm):
     class Meta:
-        model = Year
+        model = Settings
         fields = [
-            'name',
+            'application_name',
+            'address',
         ]

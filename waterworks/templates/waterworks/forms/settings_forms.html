@@ -1,35 +1,11 @@
 {% load crispy_forms_tags %}
-{% for p in profile %}
-<tr>
-  <td>{{forloop.counter|add:start}}</td>
-  <td>
-    {{p.name|upper}}
-  </td>
-  <td>
-    {{p.meter_installation.meter_no}}
-  </td>
-  <td>
-    {{ p.barangay }}
-  </td>
-  <td>
-    {{p.classification}}
-  </td>
-  <td>
-    {{p.meter_installation.reading}}
-  </td>
-
-  <td>
-    <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_reading_table_create_api' p.id %}" class="custom-form">
-      {{form|crispy}}
-    </form>
-  </td>
-</tr>
-{% empty %}
-<tr>
-  <td colspan="12" class="text-center">No data available</td>
-</tr>
-{% endfor %}
-
+{% load static %}
+<div class="card-body">
+  <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_settings_api' %}" class="custom-form">
+    {{form|crispy}}
+    <button type="submit" class="btn btn-{{btn_name}}">{{btn_title}}</button>
+  </form>
+</div>
 {% block 'script' %}
 <script>
   $(document).ready(function () {
@@ -53,7 +29,7 @@
             type: data.message_type,
             title: data.message_title
           });
-          load_data(start,end);
+          form_load();
         },
         error:function(error){
           Toast.fire({

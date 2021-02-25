@@ -16,6 +16,8 @@ from django.http import JsonResponse
 from django.template import RequestContext
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from waterworks.models import Settings
+from .forms import SettingsForm
 success = 'success'
 info = 'info'
 error = 'error'
@@ -24,3 +26,34 @@ question = 'question'
 
 class Waterworks_Settings(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/settings.html'
+
+
+class Waterwork_Settings_AJAXView(LoginRequiredMixin,View):
+    def get(self, request):
+        data = dict()
+        setting = Settings.objects.first()
+        if setting:
+            form = SettingsForm(instance=setting)
+        else:
+            form = SettingsForm()
+        context = {
+            'form':form,
+            'btn_name' : 'primary',
+            'btn_title' : 'Change',
+        }
+        data['html_form'] = render_to_string('waterworks/forms/settings_forms.html',context)
+        return JsonResponse(data)
+    def post(self, request):
+        data = dict()
+        if request.method == 'POST':
+            setting = Settings.objects.first()
+            if setting:
+                form = SettingsForm(request.POST,request.FILES,instance = setting)
+            else:
+                form = SettingsForm(request.POST,request.FILES)
+            if form.is_valid():
+                form.save()
+                data['message_type'] = success
+                data['message_title'] = 'Successfully changed.'
+                data['form_is_valid'] = True
+        return JsonResponse(data)

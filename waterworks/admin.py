@@ -17,7 +17,11 @@ from .models import (
     Collection_Charges_Cancelled,
     Activity_Logs,
     User_Logs,
+    Settings,
+    Reports,
 )
+admin.site.register(Reports)
+admin.site.register(Settings)
 admin.site.register(Classification)
 admin.site.register(Classification_Rates)
 admin.site.register(Account)
