@@ -83,15 +83,11 @@ class Waterworks_Reading_Create_Save_AJAXView(LoginRequiredMixin,View):
                     data['message_type'] = error
                     data['message_title'] = 'Negative reading.'
                     return JsonResponse(data)
-
                 for p in classification_rates:
-                    if float(total_reading) >= p.rate and p.minimum==True:
+                    if float(total_reading) >= p.consumption and p.minimum==True:
                         amount = (float(total_reading) * float(p.blocking_rate)) + float(p.value_expression)
-                        print('minimum'+ str(p.rate))
-                    elif float(total_reading) >= p.rate and p.minimum==False:
+                    elif float(total_reading) >= p.consumption and p.minimum==False:
                         amount = (float(total_reading) * float(p.blocking_rate)) - float(p.value_expression)
-                        print('not minimum' + str(p.rate))
-
                 form.instance.user = self.request.user
                 form.instance.profile = profile
                 form.instance.reading_period = reading_period

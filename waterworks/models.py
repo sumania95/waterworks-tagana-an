@@ -12,10 +12,13 @@ class Reports(models.Model):
     date_created            = models.DateTimeField(auto_now_add = True)
 
 class Settings(models.Model):
-    application_name        = models.CharField(max_length = 200)
-    address                 = models.CharField(max_length = 200)
-    date_updated            = models.DateTimeField(auto_now = True)
-    date_created            = models.DateTimeField(auto_now_add = True)
+    name                                = models.CharField(max_length = 200)
+    address                             = models.CharField(max_length = 200)
+    water_meter_charge                  = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
+    disconnection_charge                = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
+    permanently_disconnected_charge     = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
+    date_updated                        = models.DateTimeField(auto_now = True)
+    date_created                        = models.DateTimeField(auto_now_add = True)
 
 class Account(models.Model):
     user                    = models.OneToOneField(User, on_delete = models.CASCADE)
@@ -27,6 +30,10 @@ class Account(models.Model):
     is_collection_clerk     = models.BooleanField(default=False)
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
+
+    @property
+    def name(self):
+        return str(self.surname) + ", " + str(self.firstname)
 
 class Barangay(models.Model):
     name                    = models.CharField(max_length = 200)
@@ -62,16 +69,15 @@ class Classification(models.Model):
 
 class Classification_Rates(models.Model):
     classification          = models.ForeignKey(Classification, on_delete = models.CASCADE)
-    name                    = models.CharField(max_length = 200)
-    rate                    = models.IntegerField(default = 0)
-    blocking_rate           = models.IntegerField(default = 0)
-    value_expression        = models.IntegerField(default = 0)
+    consumption             = models.IntegerField(default = 0)
+    blocking_rate           = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
+    value_expression        = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
     minimum                 = models.BooleanField(default=False)
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
-        return str(self.classification)+" "+str(self.name)
+        return str(self.classification)+" "+str(self.consumption)
 
 class Profile(models.Model):
     surname                 = models.CharField(max_length = 200)
@@ -136,6 +142,8 @@ class Meter_Installation(models.Model):
     meter_no                = models.CharField(max_length = 200)
     reading                 = models.IntegerField(default=0)
     status                  = models.CharField(max_length=200,choices=status)
+    cluster                 = models.CharField(default="0000",max_length = 200)
+    sequence                = models.CharField(default="0000",max_length = 200)
     date_reading            = models.DateTimeField()
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
@@ -167,7 +175,7 @@ class Reading(models.Model):
 
     @property
     def consumption(self):
-        return int(present_reading) - int(previous_reading)
+        return int(self.present_reading) - int(self.previous_reading)
 
 class Permanently_Disconnected(models.Model):
     user                    = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -8,6 +8,9 @@ class SettingsForm(forms.ModelForm):
     class Meta:
         model = Settings
         fields = [
-            'application_name',
+            'name',
             'address',
+            'water_meter_charge',
+            'disconnection_charge',
+            'permanently_disconnected_charge',
         ]

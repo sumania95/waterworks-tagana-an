@@ -23,11 +23,13 @@ from waterworks.models import (
     Meter_Installation,
     Meter_Replace,
     Activity_Logs,
+    Settings,
+    
 )
 from .forms import (
     ProfileForm,
     Meter_InstallationForm,
-    Meter_ReplaceForm
+    Meter_ReplaceForm,
 )
 success = 'success'
 info = 'info'
@@ -64,7 +66,9 @@ class Waterworks_Profile_Create_AJAXView(LoginRequiredMixin,View):
         data =  dict()
         if request.method == 'POST':
             form = ProfileForm(request.POST,request.FILES)
+            settings = Settings.objects.first()
             if form.is_valid():
+                form.instance.water_meter_charge = settings.water_meter_charge
                 form.save()
                 data['message_type'] = success
                 data['message_title'] = 'Successfully saved.'

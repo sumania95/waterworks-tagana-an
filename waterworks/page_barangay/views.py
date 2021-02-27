@@ -99,6 +99,15 @@ class Waterworks_Barangay_Update_Save_AJAXView(LoginRequiredMixin,View):
                 data['message_title'] = 'Successfully updated.'
         return JsonResponse(data)
 
+class Waterworks_Barangay_Delete_AJAXView(LoginRequiredMixin,View):
+    def post(self, request,pk):
+        data = dict()
+        if request.method == 'POST':
+            Barangay.objects.get(pk=pk).delete()
+            data['message_type'] = success
+            data['message_title'] = 'Successfully deleted.'
+        return JsonResponse(data)
+
 class Waterworks_Barangay_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Barangay.objects.all()
     template_name = 'waterworks/tables/barangay_table.html'

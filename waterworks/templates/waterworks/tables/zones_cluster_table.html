@@ -1,0 +1,18 @@
+{% for p in profile %}
+<tr>
+  <td>C-{{p.meter_installation.cluster}}</td>
+  <td>
+    <b>{{p.name|upper}}</b>
+  </td>
+  <td>
+    {{p.meter_installation.meter_no}}
+  </td>
+  <td>
+    <a href="#" class="btn btn-warning btn-sm rounded-circle" name="button"><i class="feather icon-edit"></i></a>
+  </td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="12" class="text-center">No data available</td>
+</tr>
+{% endfor %}

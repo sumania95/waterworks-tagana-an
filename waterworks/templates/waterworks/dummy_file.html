@@ -1,0 +1,12 @@
+{% extends 'waterworks/pages/dashboard.html' %}
+
+{% block 'error' %}
+<script>
+  $(document).ready(function () {
+    Toast_ERROR.fire({
+      type: 'warning',
+      title: "{{message}}"
+    });
+  });
+</script>
+{% endblock %}

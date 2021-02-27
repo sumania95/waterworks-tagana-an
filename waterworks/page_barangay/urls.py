@@ -9,6 +9,7 @@ from .views import (
     Waterworks_Barangay_Update,
     Waterworks_Barangay_Update_AJAXView,
     Waterworks_Barangay_Update_Save_AJAXView,
+    Waterworks_Barangay_Delete_AJAXView,
 )
 
 urlpatterns = [
@@ -19,4 +20,5 @@ urlpatterns = [
     path('update/<int:pk>', Waterworks_Barangay_Update.as_view(), name = 'waterworks_barangay_update'),
     path('api/update', Waterworks_Barangay_Update_AJAXView.as_view(), name = 'waterworks_barangay_update_api'),
     path('api/update/save/<int:pk>', Waterworks_Barangay_Update_Save_AJAXView.as_view(), name = 'waterworks_barangay_update_save_api'),
+    path('api/delete/<int:pk>', Waterworks_Barangay_Delete_AJAXView.as_view(), name = 'waterworks_barangay_delete_api'),
 ]

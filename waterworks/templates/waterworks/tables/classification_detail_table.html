@@ -1,0 +1,25 @@
+{% for p in classification %}
+<tr>
+  <td>{{forloop.counter|add:start}}</td>
+  <td>
+    {{p.consumption}}
+  </td>
+  <td>
+    {% if p.minimum %}
+      {{p.value_expression}} <span class="badge badge-success">minimum</span>
+    {% else %}
+      {{p.blocking_rate}}
+    {% endif %}
+  </td>
+  <td>
+    <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_classification_delete_api' p.id %}" class="custom-form">
+      <a href="{% url 'waterworks_classification_update' p.id %}" class="btn btn-warning btn-sm rounded-circle" name="button"><i class="feather icon-edit"></i></a>
+      <button type="submit" class="btn btn-danger btn-sm rounded-circle" name="button"><i class="feather icon-trash"></i></button>
+    </form>
+  </td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="12" class="text-center">No data available</td>
+</tr>
+{% endfor %}

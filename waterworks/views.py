@@ -17,9 +17,9 @@ from datetime import datetime
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .decorators import ConfigurationRequired
 
-
-class Waterworks_Home(LoginRequiredMixin,TemplateView):
+class Waterworks_Home(LoginRequiredMixin,ConfigurationRequired,TemplateView):
     template_name = 'waterworks/pages/dashboard.html'
 
 class Waterworks_Accounts(LoginRequiredMixin,TemplateView):

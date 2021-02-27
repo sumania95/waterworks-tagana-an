@@ -40,21 +40,32 @@
         <li class="nav-item {% block 'profile_active' %}{% endblock %}">
           <a href="{% url 'waterworks_profile' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Profile</span></a>
         </li>
-        <!-- <li class="nav-item">
-          <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Area Zones</span></a>
-        </li> -->
+        <li class="nav-item">
+          <a href="{% url 'waterworks_zones' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-navigation"></i></span><span class="pcoded-mtext">Zones</span></a>
+        </li>
         <li class="nav-item">
           <a href="{% url 'waterworks_reading' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Reading</span></a>
         </li>
-        <li class="nav-item {% block 'barangay_active' %}{% endblock %}">
-          <a href="{% url 'waterworks_barangay' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Barangay</span></a>
-        </li>
-        <li class="nav-item {% block 'reading_period_active' %}{% endblock %}">
-          <a href="{% url 'waterworks_reading_period' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Reading Period</span></a>
-        </li>
-        <li class="nav-item {% block 'year_active' %}{% endblock %}">
-          <a href="{% url 'waterworks_year' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Year</span></a>
-        </li>
+        <li class="nav-item pcoded-hasmenu {% block 'maintenance_active' %}{% endblock %}">
+				    <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-layout"></i></span><span class="pcoded-mtext">Maintenance</span></a>
+				    <ul class="pcoded-submenu">
+              <li class="nav-item {% block 'barangay_active' %}{% endblock %}">
+                <a href="{% url 'waterworks_barangay' %}" class="nav-link ">Barangay</a>
+              </li>
+              <li class="nav-item {% block 'classification_active' %}{% endblock %}">
+                <a href="{% url 'waterworks_classification' %}" class="nav-link ">Classification</a>
+              </li>
+              <li class="nav-item {% block 'reading_period_active' %}{% endblock %}">
+                <a href="{% url 'waterworks_reading_period' %}" class="nav-link ">Reading Period</a>
+              </li>
+              <li class="nav-item {% block 'year_active' %}{% endblock %}">
+                <a href="{% url 'waterworks_year' %}" class="nav-link ">Year</a>
+              </li>
+				    </ul>
+				</li>
+        <!-- <li class="nav-item">
+          <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-folder"></i></span><span class="pcoded-mtext">Area Zones</span></a>
+        </li> -->
         <li class="nav-item">
           <a href="{% url 'waterworks_settings' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-settings"></i></span><span class="pcoded-mtext">Settings</span></a>
         </li>
@@ -64,6 +75,9 @@
         <!-- <li class="nav-item">
           <a href="{% url 'waterworks_audit_trails' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-activity"></i></span><span class="pcoded-mtext">Audit Trail</span></a>
         </li> -->
+        <li class="nav-item">
+          <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-user"></i></span><span class="pcoded-mtext">Users</span></a>
+        </li>
         <li class="nav-item">
           <a href="{% url 'waterworks_logout' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-log-out text-danger"></i></span><span class="pcoded-mtext">Sign Out</span></a>
         </li>
@@ -103,6 +117,17 @@
           <a href="#!" class="dropdown-toggle" data-toggle="dropdown">
             <img src="{% static 'user_images/user_male.png' %}" width="40px" height="40px" class="img-radius wid-40" alt="User-Profile-Image">
           </a>
+          <div class="dropdown-menu dropdown-menu-right profile-notification">
+						<div class="pro-head">
+							<img src="{% static 'user_images/user_male.png' %}" class="img-radius" alt="User-Profile-Image">
+							<span>{{user.account.name}}</span>
+						</div>
+						<ul class="pro-body">
+							<li><a href="#" class="dropdown-item"><i class="feather icon-user"></i>My Profile</a></li>
+              <li><a href="#" class="dropdown-item"><i class="feather icon-activity"></i>Transaction Logs</a></li>
+							<li><a href="#" class="dropdown-item"><i class="feather icon-lock"></i>Security</a></li>
+						</ul>
+					</div>
         </div>
       </li>
     </ul>
@@ -131,6 +156,14 @@
   });
 </script>
 <script type="text/javascript">
+  const Toast_ERROR = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 10000
+  });
+</script>
+<script type="text/javascript">
   function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -153,6 +186,8 @@
 </script>
 
 {% block 'script' %}
+{% endblock %}
+{% block 'error' %}
 {% endblock %}
 
 </body>
