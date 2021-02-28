@@ -17,6 +17,5 @@ urlpatterns = [
     path('settings/',include('waterworks.page_settings.urls')),
     path('reports/',include('waterworks.page_reports.urls')),
     path('users/',include('waterworks.page_users.urls')),
-    path('audit-trails/',include('waterworks.page_audit_trails.urls')),
     path('auth/',include('waterworks.page_auth.urls')),
 ]
