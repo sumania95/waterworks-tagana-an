@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from .import views
 
 from .views import (
@@ -13,6 +13,7 @@ from .views import (
 
 urlpatterns = [
     path('', Waterworks_Reading_Period.as_view(), name = 'waterworks_reading_period'),
+    path('detail/',include('waterworks.page_reading_period_details.urls')),
     path('create', Waterworks_Reading_Period_Create.as_view(), name = 'waterworks_reading_period_create'),
     path('api/create', Waterworks_Reading_Period_Create_AJAXView.as_view(), name = 'waterworks_reading_period_create_api'),
     path('api/table', Waterworks_Reading_Period_Table_AJAXView.as_view(), name = 'waterworks_reading_period_table_api'),

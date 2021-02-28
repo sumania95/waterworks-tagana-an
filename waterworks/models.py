@@ -126,6 +126,9 @@ class Reading_Period(models.Model):
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
+    @property
+    def description(self):
+        return str(self.month) + " " + str(self.year)
 
     class Meta:
         ordering = ['month']

@@ -92,21 +92,6 @@
   <div class="collapse navbar-collapse">
     <ul class="navbar-nav ml-auto">
       <li>
-        <div class="dropdown">
-          <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon feather icon-layers"></i></a>
-          <div class="dropdown-menu dropdown-menu-right notification">
-            <div class="card-header p-2">
-              <h6>My Application</h6>
-            </div>
-            <ul class="pro-body">
-              <li class="notification">
-                <td style="white-space:nowrap;width:50%;"><a href="{% url 'waterworks_home' %}" type="button" class="btn w-40" name="button"><i class="icon feather icon-home fa-2x text-warning"></i><br>SPRING HRIS</a></td>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </li>
-      <li>
         <div class="dropdown drp-user">
           <a href="#!" class="dropdown-toggle" data-toggle="dropdown">
             <img src="{% static 'user_images/user_male.png' %}" width="40px" height="40px" class="img-radius wid-40" alt="User-Profile-Image">
@@ -115,6 +100,7 @@
 						<div class="pro-head">
 							<img src="{% static 'user_images/user_male.png' %}" class="img-radius" alt="User-Profile-Image">
 							<span>{{user.account.name}}</span>
+              <i class="pull-right feather icon-user"></i>
 						</div>
 						<ul class="pro-body">
 							<li><a href="#" class="dropdown-item"><i class="feather icon-user"></i>My Profile</a></li>
