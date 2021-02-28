@@ -21,6 +21,10 @@ from waterworks.models import (
     Barangay,
     Meter_Installation,
 )
+from .forms import (
+    Meter_Installation_Cluster_Form,
+    Meter_Installation_Sequence_Form,
+)
 from django.utils import timezone
 
 
@@ -64,4 +68,58 @@ class Waterworks_Zones_Table_AJAXView(LoginRequiredMixin,View):
             elif zones == 'Sequence':
                 profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains=search),meter_installation__status__in=[1,2],barangay=barangay).order_by('meter_installation__sequence')[int(start):int(end)]
                 data['profile'] = render_to_string(self.template_name_sequence,{'profile':profile,'start':start})
+        return JsonResponse(data)
+
+class Waterworks_Zones_Cluster_AJAXView(LoginRequiredMixin,View):
+    template_name = 'waterworks/forms/cluster_sequence_forms.html'
+    def get(self, request,pk):
+        data = dict()
+        profile = Meter_Installation.objects.get(profile_id=pk)
+        form = Meter_Installation_Cluster_Form(instance=profile)
+        context = {
+            'form': form,
+            'profile': profile,
+            'title': "Cluster",
+            'is_Cluster': True,
+            'btn_name': "warning",
+            'btn_title': "Change",
+        }
+        data['html_form'] = render_to_string(self.template_name,context)
+        return JsonResponse(data)
+    def post(self, request,pk):
+        data =  dict()
+        profile = Meter_Installation.objects.get(profile_id=pk)
+        if request.method == 'POST':
+            form = Meter_Installation_Cluster_Form(request.POST,request.FILES,instance=profile)
+            if form.is_valid():
+                form.save()
+                data['message_type'] = success
+                data['message_title'] = 'Successfully changed.'
+        return JsonResponse(data)
+
+class Waterworks_Zones_Sequence_AJAXView(LoginRequiredMixin,View):
+    template_name = 'waterworks/forms/cluster_sequence_forms.html'
+    def get(self, request,pk):
+        data = dict()
+        profile = Meter_Installation.objects.get(profile_id=pk)
+        form = Meter_Installation_Sequence_Form(instance=profile)
+        context = {
+            'form': form,
+            'profile': profile,
+            'title': "Sequence",
+            'is_Sequence': True,
+            'btn_name': "info",
+            'btn_title': "Change",
+        }
+        data['html_form'] = render_to_string(self.template_name,context)
+        return JsonResponse(data)
+    def post(self, request,pk):
+        data =  dict()
+        profile = Meter_Installation.objects.get(profile_id=pk)
+        if request.method == 'POST':
+            form = Meter_Installation_Sequence_Form(request.POST,request.FILES,instance=profile)
+            if form.is_valid():
+                form.save()
+                data['message_type'] = success
+                data['message_title'] = 'Successfully changed.'
         return JsonResponse(data)

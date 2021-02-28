@@ -1,15 +1,17 @@
-{% for p in classification %}
+{% for p in account %}
 <tr>
   <td>{{forloop.counter|add:start}}</td>
   <td>
     {{p.name|upper}}
   </td>
   <td>
-    <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_classification_delete_api' p.id %}" class="custom-form">
-      <a href="{% url 'waterworks_classification_detail' p.id %}" class="btn btn-secondary btn-sm rounded-circle" name="button"><i class="feather icon-monitor"></i></a>
-      <a href="{% url 'waterworks_classification_update' p.id %}" class="btn btn-warning btn-sm rounded-circle" name="button"><i class="feather icon-edit"></i></a>
-      <button type="submit" class="btn btn-danger btn-sm rounded-circle confirm-delete" name="button"><i class="feather icon-trash"></i></button>
-    </form>
+    {{p.user.username}}
+  </td>
+  <td>
+    {{p.user.is_active}}
+  </td>
+  <td>
+    <a href="#" class="btn btn-warning btn-sm rounded-circle" name="button"><i class="feather icon-lock"></i></a>
   </td>
 </tr>
 {% empty %}

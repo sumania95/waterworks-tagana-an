@@ -8,7 +8,7 @@
     {{p.meter_installation.meter_no}}
   </td>
   <td>
-    <a href="#" class="btn btn-info btn-sm rounded-circle" name="button"><i class="feather icon-edit"></i></a>
+    <button data-url="{% url 'waterworks_zones_table_sequence_api' p.id %}" type="button" class="btn btn-info btn-sm rounded-circle form-show-sequence" name="button"><i class="feather icon-edit"></i></button>
   </td>
 </tr>
 {% empty %}
@@ -16,3 +16,22 @@
   <td colspan="12" class="text-center">No data available</td>
 </tr>
 {% endfor %}
+{% block 'script' %}
+<script>
+  $(document).on('click', '.form-show-sequence', function(){
+    var btn = $(this);
+    $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType:'json',
+      beforeSend: function(){
+        $('#modal-show-sm').modal('show');
+      },
+      success: function(data){
+        $('#modal-show-sm .modal-content').html(data.html_form);
+      }
+    });
+  });
+</script>
+
+{% endblock %}

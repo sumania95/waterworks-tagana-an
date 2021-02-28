@@ -1,13 +1,19 @@
 from django import forms
 from django.forms import ModelForm
 from waterworks.models import (
-    Reading,
+    Meter_Installation,
 )
 
-class ReadingForm(forms.ModelForm):
-    present_reading = forms.IntegerField(label='',widget=forms.NumberInput(attrs={'class':"form-control-sm"}))
+class Meter_Installation_Cluster_Form(forms.ModelForm):
     class Meta:
-        model = Reading
+        model = Meter_Installation
         fields = [
-            'present_reading',
+            'cluster',
+        ]
+
+class Meter_Installation_Sequence_Form(forms.ModelForm):
+    class Meta:
+        model = Meter_Installation
+        fields = [
+            'sequence',
         ]

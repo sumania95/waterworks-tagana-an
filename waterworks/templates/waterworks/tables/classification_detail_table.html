@@ -12,9 +12,9 @@
     {% endif %}
   </td>
   <td>
-    <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_classification_delete_api' p.id %}" class="custom-form">
-      <a href="{% url 'waterworks_classification_update' p.id %}" class="btn btn-warning btn-sm rounded-circle" name="button"><i class="feather icon-edit"></i></a>
-      <button type="submit" class="btn btn-danger btn-sm rounded-circle" name="button"><i class="feather icon-trash"></i></button>
+    <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_classification_detail_delete_api' p.id %}" class="custom-form">
+      <button type="button" data-url="{% url 'waterworks_classification_detail_update_api' p.id %}" class="btn btn-warning btn-sm rounded-circle form-show-classification-rates" name="button"><i class="feather icon-edit"></i></button>
+      <button type="submit" class="btn btn-danger btn-sm rounded-circle confirm-delete" name="button"><i class="feather icon-trash"></i></button>
     </form>
   </td>
 </tr>
@@ -23,3 +23,55 @@
   <td colspan="12" class="text-center">No data available</td>
 </tr>
 {% endfor %}
+{% block 'script' %}
+<script>
+  $(document).on('click', '.form-show-classification-rates', function(){
+    var btn = $(this);
+    $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType:'json',
+      beforeSend: function(){
+        $('#modal-show-md').modal('show');
+      },
+      success: function(data){
+        $('#modal-show-md .modal-content').html(data.html_form);
+      }
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    var csrftoken = getCookie('csrftoken');
+    $(".custom-form").submit(function (event) {
+      event.preventDefault();
+      var form = $(this);
+      $.ajax({
+        url: form.attr('data-url'),
+        data: form.serialize(),
+        type: form.attr('method'),
+        dataType: 'json',
+        beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        },
+        success: function(data){
+          Toast.fire({
+            type: data.message_type,
+            title: data.message_title
+          });
+          load_data(start,end);
+        },
+        error:function(error){
+          Toast.fire({
+            type: 'error',
+            title: 'ERROR Connection Lost.'
+          });
+        },
+      })
+      return false;
+    });
+  });
+</script>
+{% endblock %}

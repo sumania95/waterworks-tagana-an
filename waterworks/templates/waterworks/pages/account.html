@@ -3,7 +3,7 @@
 
 {% block 'content' %}
 <div class="col-md-12">
-  <h5>Classification</h5>
+  <h5>Users</h5>
   <hr>
 
 </div>
@@ -22,7 +22,7 @@
               <input type="search" class="form-control float-right mr-1" placeholder="Search...." name="search" id="search">
             </td>
             <td>
-              <a href="{% url 'waterworks_classification_create' %}" type="button" class="btn btn-primary" name="button">New</a>
+              <a href="{% url 'waterworks_account_create' %}" type="button" class="btn btn-primary" name="button">New</a>
             </td>
           </tr>
         </table>
@@ -35,10 +35,12 @@
             <tr>
               <th width="5%">#</th>
               <th>Name</th>
+              <th width="25%">Username</th>
+              <th width="5%">Status</th>
               <th width="10%"></th>
             </tr>
           </thead>
-          <tbody id="classification_table">
+          <tbody id="account_table">
           </tbody>
         </table>
       </div>
@@ -56,9 +58,6 @@
 
 {% block 'script' %}
 <script>
-  $(document).on('click', '.confirm-delete', function(){
-    return confirm('Are you sure you want to remove this?');
-  });
   var start = 0;
   var end = 10;
   var counts;
@@ -77,14 +76,14 @@
   function load_data(start,end){
     var search = $("#search").val();
     $.ajax({
-      url: '{% url 'waterworks_classification_table_api' %}',
+      url: '{% url 'waterworks_account_table_api' %}',
       type: 'get',
       data: {start:start,end:end,search:search},
       dataType: 'json',
       success:function(data){
         counts = data.counter;
         $('#counter').html(data.counter + " record(s) found");
-        $('#classification_table').html(data.classification);
+        $('#account_table').html(data.account);
         disabled();
       },
     });

@@ -1,28 +1,23 @@
-{% for p in classification %}
-<tr>
-  <td>{{forloop.counter|add:start}}</td>
-  <td>
-    {{p.name|upper}}
-  </td>
-  <td>
-    <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_classification_delete_api' p.id %}" class="custom-form">
-      <a href="{% url 'waterworks_classification_detail' p.id %}" class="btn btn-secondary btn-sm rounded-circle" name="button"><i class="feather icon-monitor"></i></a>
-      <a href="{% url 'waterworks_classification_update' p.id %}" class="btn btn-warning btn-sm rounded-circle" name="button"><i class="feather icon-edit"></i></a>
-      <button type="submit" class="btn btn-danger btn-sm rounded-circle confirm-delete" name="button"><i class="feather icon-trash"></i></button>
-    </form>
-  </td>
-</tr>
-{% empty %}
-<tr>
-  <td colspan="12" class="text-center">No data available</td>
-</tr>
-{% endfor %}
-
+{% load crispy_forms_tags %}
+{% load static %}
+<div class="modal-header p-2">
+  <h5 class="modal-title">{{title}}</h5>
+</div>
+<form method="POST" enctype="multipart/form-data" data-url="{% if is_Create %}{% url 'waterworks_classification_detail_create_api' classification.id %}{% else %}{% url 'waterworks_classification_detail_update_api' classification_rates.id %}{% endif %}" class="custom-form">
+  <div class="modal-body p-2">
+    {{form|crispy}}
+  </div>
+  <div class="modal-footer p-2">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-{{btn_name}}">{{btn_title}}</button>
+  </div>
+</form>
 {% block 'script' %}
+
+
 <script>
   $(document).ready(function () {
     var csrftoken = getCookie('csrftoken');
-
     $(".custom-form").submit(function (event) {
       event.preventDefault();
       var form = $(this);
@@ -42,6 +37,7 @@
             title: data.message_title
           });
           load_data(start,end);
+          $('#modal-show-md').modal('hide');
         },
         error:function(error){
           Toast.fire({

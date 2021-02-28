@@ -5,7 +5,7 @@
 
 {% block 'content' %}
 <div class="col-md-12">
-  <h5>{{object.classification|upper}}</h5>
+  <h5>{{object.name|upper}}</h5>
   <hr>
 
 </div>
@@ -21,7 +21,7 @@
         <table>
           <tr>
             <td>
-              <a href="{% url 'waterworks_classification_create' %}" type="button" class="btn btn-primary" name="button">New</a>
+              <button data-url="{% url 'waterworks_classification_detail_create_api' object.id %}" type="button" class="btn btn-primary form-show-classification-create" name="button">New</button>
             </td>
           </tr>
         </table>
@@ -56,6 +56,25 @@
 
 {% block 'script' %}
 <script>
+  $(document).on('click', '.form-show-classification-create', function(){
+    var btn = $(this);
+    $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType:'json',
+      beforeSend: function(){
+        $('#modal-show-md').modal('show');
+      },
+      success: function(data){
+        $('#modal-show-md .modal-content').html(data.html_form);
+      }
+    });
+  });
+</script>
+<script>
+  $(document).on('click', '.confirm-delete', function(){
+    return confirm('Are you sure you want to remove this?');
+  });
   var start = 0;
   var end = 10;
   var counts;
