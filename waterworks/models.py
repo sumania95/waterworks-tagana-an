@@ -14,6 +14,7 @@ class Reports(models.Model):
 class Settings(models.Model):
     name                                = models.CharField(max_length = 200)
     address                             = models.CharField(max_length = 200)
+    logo                                = models.FileField(upload_to='logo/')
     water_meter_charge                  = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
     disconnection_charge                = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
     permanently_disconnected_charge     = models.DecimalField(default=0,max_digits = 50,decimal_places=2)

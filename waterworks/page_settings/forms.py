@@ -10,6 +10,7 @@ class SettingsForm(forms.ModelForm):
         fields = [
             'name',
             'address',
+            'logo',
             'water_meter_charge',
             'disconnection_charge',
             'permanently_disconnected_charge',

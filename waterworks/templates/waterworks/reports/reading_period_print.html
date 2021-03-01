@@ -3,7 +3,7 @@
 <head>
     {% load static %}
     <meta charset="utf-8">
-    <title>CSC Service Record</title>
+    <title>Reading Sheet {{barangay.name}}</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'image/lgutubodlogo.png' %}"/>
     <style type="text/css">
         @page {
@@ -16,7 +16,7 @@
             /* padding: 5px; */
             @frame footer_frame {           /* Static frame */
             -pdf-frame-content: footer_content;
-            left: 50pt; width: 512pt; top: 810pt; height: 20pt;
+            left: 30pt; width: 522pt; top: 810pt; height: 30pt;
         }
         }
 
@@ -48,26 +48,50 @@
         .bordered {
           border: 1px solid black;
         }
+        .column {
+          float: left;
+          width: 50%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
     </style>
 
 </head>
 <body>
-<div id="footer_content" style="text-align:center;">(c) - page <pdf:pagenumber>
-    of <pdf:pagecount>
-</div>
+<table id="footer_content">
+  <tr>
+    <td class="text-left">
+      <i>Date & Time Generated : {{now}}</i>
+    </td>
+    <td class="text-right">
+      <i>Page <pdf:pagenumber> of <pdf:pagecount></i>
+    </td>
+  </tr>
+</table>
 <div class="container">
 <!-- Content for Static Frame 'footer_frame' -->
+  <table class="font-times">
+    <tr>
+      <td rowspan="3" style="width: 60px;vertical-align: top;padding-right:3px;padding-bottom:5px;"><img src="{{settings.logo.url}}" alt=""></td>
+      <td colspan="10">
+        <h5>{{settings.name|upper}}</h5>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="10"><p>READING PERIOD : {{reading_period.get_month_display|upper}} {{reading_period.year}}</p></td>
+    </tr>
+    <tr>
+      <td colspan="10"><p>BARANGAY : {{barangay.name|upper}}</p></td>
+    </tr>
+  </table>
 
   <table class="text-center">
-    <tr>
-      <td><h1>R E A D I N G S H E E T</h1></td>
-    </tr>
-    <tr>
-      <td><h5>READING PERIOD : {{reading_period.get_month_display|upper}} {{reading_period.year}}</h5></td>
-    </tr>
-    <tr>
-      <td><h5>BARANGAY : {{barangay.name|upper}}</h5></td>
-    </tr>
+
   </table>
   <table class="font-times table bordered">
     <thead>

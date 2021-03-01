@@ -55,6 +55,7 @@ class Waterworks_Reading_Period_Print(LoginRequiredMixin,View):
             barangay_id = self.request.GET.get('barangay_id')
         except KeyError:
             barangay_id = None
+        settings = Settings.objects.first()
         reading_period = Reading_Period.objects.get(id=pk)
         barangay = Barangay.objects.get(id=barangay_id)
         profile = Profile.objects.filter(meter_installation__reading_period__lt=reading_period,meter_installation__status = 1,barangay_id=barangay_id).order_by('meter_installation__cluster','surname','firstname','middlename')
@@ -62,6 +63,7 @@ class Waterworks_Reading_Period_Print(LoginRequiredMixin,View):
             'now': now,
             'reading_period' :reading_period,
             'barangay' :barangay,
+            'settings' :settings,
             'profile': profile,
         }
         pdf = Render.render('waterworks/reports/reading_period_print.html', params)

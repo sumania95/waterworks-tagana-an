@@ -24,7 +24,7 @@ from waterworks.models import (
     Meter_Replace,
     Activity_Logs,
     Settings,
-    
+
 )
 from .forms import (
     ProfileForm,
@@ -69,9 +69,10 @@ class Waterworks_Profile_Create_AJAXView(LoginRequiredMixin,View):
             settings = Settings.objects.first()
             if form.is_valid():
                 form.instance.water_meter_charge = settings.water_meter_charge
-                form.save()
+                profile = form.save()
                 data['message_type'] = success
                 data['message_title'] = 'Successfully saved.'
+                data['url'] = reverse('waterworks_profile_detail',kwargs={'pk':profile.id})
         return JsonResponse(data)
 
 class Waterworks_Profile_Update(LoginRequiredMixin,TemplateView):

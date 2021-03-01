@@ -62,10 +62,10 @@ class Waterworks_Reading_Period_Create_AJAXView(LoginRequiredMixin,View):
                 else:
                     form.instance.year = year
                     form.instance.user = self.request.user
-                    form.save()
+                    reading_period = form.save()
                     data['message_type'] = success
                     data['message_title'] = 'Successfully saved.'
-                    data['url'] = reverse('waterworks_reading_period')
+                    data['url'] = reverse('waterworks_reading_period_detail',kwargs={'pk':reading_period.id})
         return JsonResponse(data)
 
 class Waterworks_Reading_Period_Update(LoginRequiredMixin,TemplateView):

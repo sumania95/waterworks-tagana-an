@@ -11,25 +11,18 @@
 </div>
 <div class="col-md-12">
   <div class="card">
-    <div class="card-header p-2">
-      <table>
-        <tr>
-          <td>Filter</td>
-          <form action="{% url 'waterworks_reading_period_print' object.id %}" target="_blank" method="GET">
-            <td>
-              <select class="form-control" name="barangay_id" id="barangay_id">
-                <option value="0">--Select--</option>
-                {% for p in barangay %}
-                <option value="{{p.id}}">{{p.name}}</option>
-                {% endfor %}
-              </select>
-            </td>
-            <td>
-              <button type="submit" class="btn btn-secondary btn-sm" name="button"><i class="feather icon-printer mr-2"></i>Print Records</button>
-            </td>
-          </form>
-        </tr>
-      </table>
+    <div class="card-body p-2">
+      <form action="{% url 'waterworks_reading_period_print' object.id %}" target="_blank" method="GET">
+        <div class="form-group">
+          <label for="">Choose Barangay</label>
+          <select class="form-control" name="barangay_id" id="barangay_id">
+            {% for p in barangay %}
+            <option value="{{p.id}}">{{p.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-secondary btn-sm" name="button"><i class="feather icon-printer mr-2"></i>Print Reading Sheet</button>
+      </form>
     </div>
   </div>
 </div>
