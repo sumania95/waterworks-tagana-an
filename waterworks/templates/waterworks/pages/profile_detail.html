@@ -64,7 +64,7 @@
           {% elif object.meter_installation.status == '2' %}
             <span class="badge badge-danger">Disconnected</span>
           {% elif object.permanently_disconnected %}
-            <span class="badge badge-warning">Permanently Disconnected</span>
+            <span class="badge badge-danger">Condemn</span>
           {% else %}
             <span class="badge badge-secondary">New</span>
           {% endif %}
@@ -72,17 +72,17 @@
         <hr>
         <p class="text-muted">{{object.barangay|upper}}</p>
         <hr>
-        <a href="{% url 'waterworks_profile_update' object.id %}" type="button" class="btn btn-block btn-warning btn-sm" name="button">Update Info</a>
+      </div>
+      <div class="text-center m-2">
+        <a href="{% url 'waterworks_profile_update' object.id %}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Update Info" type="button" class="btn rounded-circle btn-warning btn-sm" name="button"><i class="feather icon-edit"></i></a>
         {% if object.meter_installation.status == '1' %}
-          <a href="{% url 'waterworks_profile_meter_replace_create' object.id %}" type="button" class="btn btn-block btn-success btn-sm" name="button">Replace Meter</a>
-          <button type="button" class="btn btn-block btn-danger btn-sm" name="button">Change Disconnected</button>
-          <button type="button" class="btn btn-block btn-danger btn-sm" name="button">Change Condemn</button>
+          <a href="{% url 'waterworks_profile_meter_replace_create' object.id %}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Replace Meter" type="button" class="btn rounded-circle btn-success btn-sm" name="button"><i class="fa fa-tachometer-alt"></i></a>
+          <a href="{% url 'waterworks_profile_meter_disconnected_create' object.id %}" type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Disconnected" class="btn rounded-circle btn-danger btn-sm" name="button"><i class="feather icon-lock"></i></a>
+          <a href="{% url 'waterworks_profile_meter_disconnected_permanently_create' object.id %}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Condemn" type="button" class="btn rounded-circle btn-danger btn-sm" name="button"><i class="feather icon-x"></i></a>
         {% elif object.meter_installation.status == '2' %}
-          <button type="button" class="btn btn-block btn-info btn-sm" name="button">Change to active</button>
-        {% elif object.permanently_disconnected %}
-          <a href="{% url 'waterworks_profile_meter_installation_create' object.id %}" type="button" class="btn btn-block btn-success btn-sm" name="button">Install Meter</a>
+          <a href="{% url 'waterworks_profile_meter_active_create' object.id %}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Activate" type="button" class="btn rounded-circle btn-primary btn-sm" name="button"><i class="feather icon-unlock"></i></a>
         {% else %}
-          <a href="{% url 'waterworks_profile_meter_installation_create' object.id %}" type="button" class="btn btn-block btn-success btn-sm" name="button">Install Meter</a>
+          <a href="{% url 'waterworks_profile_meter_installation_create' object.id %}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Install Meter" type="button" class="btn rounded-circle btn-success btn-sm" name="button"><i class="fa fa-tachometer-alt"></i></a>
         {% endif %}
       </div>
     </div>

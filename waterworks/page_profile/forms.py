@@ -5,6 +5,7 @@ from waterworks.models import (
     Barangay,
     Meter_Installation,
     Meter_Replace,
+    Meter_Status_History,
 )
 
 class ProfileForm(forms.ModelForm):
@@ -35,5 +36,12 @@ class Meter_ReplaceForm(forms.ModelForm):
         fields = [
             'meter_no',
             'reading',
+            'reason',
+        ]
+
+class Meter_DisconnectedForm(forms.ModelForm):
+    class Meta:
+        model = Meter_Status_History
+        fields = [
             'reason',
         ]

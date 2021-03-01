@@ -69,7 +69,7 @@ class Waterworks_Account_Delete_AJAXView(LoginRequiredMixin,View):
         return JsonResponse(data)
 
 class Waterworks_Account_Table_AJAXView(LoginRequiredMixin,View):
-    queryset = Account.objects.all()
+    queryset = Account.objects.exclude(is_admin=True).all()
     template_name = 'waterworks/tables/account_table.html'
     def get(self, request):
         data = dict()

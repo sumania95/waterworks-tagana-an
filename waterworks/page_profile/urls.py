@@ -15,6 +15,15 @@ from .views import (
     Waterworks_Profile_Meter_Replace_Create,
     Waterworks_Profile_Meter_Replace_Create_AJAXView,
     Waterworks_Profile_Meter_Replace_Create_Save_AJAXView,
+    Waterworks_Profile_Meter_Disconnected_Create,
+    Waterworks_Profile_Meter_Disconnected_Create_AJAXView,
+    Waterworks_Profile_Meter_Disconnected_Create_Save_AJAXView,
+    Waterworks_Profile_Meter_Disconnected_Permanently_Create,
+    Waterworks_Profile_Meter_Disconnected_Permanently_Create_AJAXView,
+    Waterworks_Profile_Meter_Disconnected_Permanently_Create_Save_AJAXView,
+    Waterworks_Profile_Meter_Active_Create,
+    Waterworks_Profile_Meter_Active_Create_AJAXView,
+    Waterworks_Profile_Meter_Active_Create_Save_AJAXView,
 )
 
 urlpatterns = [
@@ -32,4 +41,13 @@ urlpatterns = [
     path('meter-replace/<int:pk>', Waterworks_Profile_Meter_Replace_Create.as_view(), name = 'waterworks_profile_meter_replace_create'),
     path('api/meter-replace', Waterworks_Profile_Meter_Replace_Create_AJAXView.as_view(), name = 'waterworks_profile_meter_replace_create_api'),
     path('api/meter-replace/save/<int:pk>', Waterworks_Profile_Meter_Replace_Create_Save_AJAXView.as_view(), name = 'waterworks_profile_meter_replace_create_save_api'),
+    path('meter-disconnected/<int:pk>', Waterworks_Profile_Meter_Disconnected_Create.as_view(), name = 'waterworks_profile_meter_disconnected_create'),
+    path('api/meter-disconnected', Waterworks_Profile_Meter_Disconnected_Create_AJAXView.as_view(), name = 'waterworks_profile_meter_disconnected_create_api'),
+    path('api/meter-disconnected/save/<int:pk>', Waterworks_Profile_Meter_Disconnected_Create_Save_AJAXView.as_view(), name = 'waterworks_profile_meter_disconnected_create_save_api'),
+    path('meter-disconnected-permanently/<int:pk>', Waterworks_Profile_Meter_Disconnected_Permanently_Create.as_view(), name = 'waterworks_profile_meter_disconnected_permanently_create'),
+    path('api/meter-disconnected-permanently', Waterworks_Profile_Meter_Disconnected_Permanently_Create_AJAXView.as_view(), name = 'waterworks_profile_meter_disconnected_permanently_create_api'),
+    path('api/meter-disconnected-permanently/save/<int:pk>', Waterworks_Profile_Meter_Disconnected_Permanently_Create_Save_AJAXView.as_view(), name = 'waterworks_profile_meter_disconnected_permanently_create_save_api'),
+    path('meter-active/<int:pk>', Waterworks_Profile_Meter_Active_Create.as_view(), name = 'waterworks_profile_meter_active_create'),
+    path('api/meter-active', Waterworks_Profile_Meter_Active_Create_AJAXView.as_view(), name = 'waterworks_profile_meter_active_create_api'),
+    path('api/meter-active/save/<int:pk>', Waterworks_Profile_Meter_Active_Create_Save_AJAXView.as_view(), name = 'waterworks_profile_meter_active_create_save_api'),
 ]

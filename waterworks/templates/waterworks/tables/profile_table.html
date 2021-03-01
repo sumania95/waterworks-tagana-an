@@ -13,7 +13,7 @@
     {% elif p.meter_installation.status == '2' %}
       <span class="badge badge-danger">Disconnected</span>
     {% elif p.permanently_disconnected %}
-      <span class="badge badge-warning">Permanently Disconnected</span>
+      <span class="badge badge-danger">Condemn</span>
     {% else %}
       <span class="badge badge-secondary">New</span>
     {% endif %}
@@ -22,7 +22,7 @@
     {% if p.meter_installation.status == '1' %}
       {{p.meter_installation.meter_no}}
     {% elif p.meter_installation.status == '2' %}
-      {{p.meter_installation.meter_no
+      {{p.meter_installation.meter_no}}
     {% elif p.permanently_disconnected %}
       No Meter
     {% else %}
@@ -33,7 +33,7 @@
     {{ p.barangay }}
   </td>
   <td>
-    <a href="{% url 'waterworks_profile_detail' p.id %}" class="btn btn-info btn-sm rounded-circle" name="button"><i class="feather icon-monitor"></i></a>
+    <a href="{% url 'waterworks_profile_detail' p.id %}" id="hovertip" data-toggle="tooltip" data-placement="top" title="" data-original-title="View Details" class="btn btn-info btn-sm rounded-circle" name="button"><i class="feather icon-monitor"></i></a>
   </td>
 </tr>
 {% empty %}
@@ -41,3 +41,10 @@
   <td colspan="12" class="text-center">No data available</td>
 </tr>
 {% endfor %}
+{% block 'script' %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("a").tooltip({container:'table'});
+  });
+</script>
+{% endblock %}

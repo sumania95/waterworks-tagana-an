@@ -24,12 +24,14 @@ from waterworks.models import (
     Meter_Replace,
     Activity_Logs,
     Settings,
+    Permanently_Disconnected,
 
 )
 from .forms import (
     ProfileForm,
     Meter_InstallationForm,
     Meter_ReplaceForm,
+    Meter_DisconnectedForm,
 )
 success = 'success'
 info = 'info'
@@ -169,6 +171,7 @@ class Waterworks_Profile_Meter_Installation_Create_Save_AJAXView(LoginRequiredMi
                     data['message_type'] = warning
                     data['message_title'] = 'Duplicated Meter Number.'
                 else:
+                    Permanently_Disconnected.objects.filter(profile=profile).delete()
                     form.instance.profile = profile
                     form.instance.reading_period = reading_period
                     form.instance.user = self.request.user
@@ -239,6 +242,115 @@ class Waterworks_Profile_Meter_Replace_Create_Save_AJAXView(LoginRequiredMixin,V
                     data['url'] = reverse('waterworks_profile_detail',kwargs={'pk':profile.id})
         return JsonResponse(data)
 
+# disconnected
+class Waterworks_Profile_Meter_Disconnected_Create(LoginRequiredMixin,TemplateView):
+    template_name = 'waterworks/components/meter_disconnected_create.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Change Disconnected"
+        try:
+            id = self.kwargs['pk']
+            context['profile'] = Profile.objects.get(id = id)
+        except Exception as e:
+            pass
+        return context
+class Waterworks_Profile_Meter_Disconnected_Create_AJAXView(LoginRequiredMixin,View):
+    template_name = 'waterworks/forms/meter_disconnected_forms.html'
+    def get(self, request):
+        data = dict()
+        try:
+            id = self.request.GET.get('id')
+        except KeyError:
+            id = None
+        profile = Profile.objects.get(pk=id)
+        form = Meter_DisconnectedForm()
+        context = {
+            'form': form,
+            'profile': profile,
+            'is_Create': True,
+            'btn_name': "danger",
+            'btn_title': "Disconnected",
+        }
+        data['html_form'] = render_to_string(self.template_name,context)
+        return JsonResponse(data)
+
+class Waterworks_Profile_Meter_Disconnected_Create_Save_AJAXView(LoginRequiredMixin,View):
+    def post(self, request,pk):
+        data = dict()
+        settings = Settings.objects.first()
+        if request.method == 'POST':
+            form = Meter_DisconnectedForm(request.POST,request.FILES)
+            if form.is_valid():
+                profile = Profile.objects.get(pk=pk)
+                log = Activity_Logs.objects.create(user=self.request.user,profile=profile,logs = 4)
+                Profile.objects.filter(pk=pk).update(reconnection_charge=F('reconnection_charge')+settings.disconnection_charge)
+                Meter_Installation.objects.filter(profile=profile).update(status=2)
+                form.instance.profile = profile
+                form.instance.user = self.request.user
+                form.instance.log = log
+                form.instance.status = 2
+                form.save()
+                data['message_type'] = success
+                data['message_title'] = 'Successfully updated.'
+                data['url'] = reverse('waterworks_profile_detail',kwargs={'pk':profile.id})
+        return JsonResponse(data)
+
+# disconnected_permanently
+class Waterworks_Profile_Meter_Disconnected_Permanently_Create(LoginRequiredMixin,TemplateView):
+    template_name = 'waterworks/components/meter_disconnected_permanently_create.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Change Condemn"
+        try:
+            id = self.kwargs['pk']
+            context['profile'] = Profile.objects.get(id = id)
+        except Exception as e:
+            pass
+        return context
+class Waterworks_Profile_Meter_Disconnected_Permanently_Create_AJAXView(LoginRequiredMixin,View):
+    template_name = 'waterworks/forms/meter_disconnected_permanently_forms.html'
+    def get(self, request):
+        data = dict()
+        try:
+            id = self.request.GET.get('id')
+        except KeyError:
+            id = None
+        profile = Profile.objects.get(pk=id)
+        form = Meter_DisconnectedForm()
+        context = {
+            'form': form,
+            'profile': profile,
+            'is_Create': True,
+            'btn_name': "danger",
+            'btn_title': "Condemn",
+        }
+        data['html_form'] = render_to_string(self.template_name,context)
+        return JsonResponse(data)
+
+class Waterworks_Profile_Meter_Disconnected_Permanently_Create_Save_AJAXView(LoginRequiredMixin,View):
+    def post(self, request,pk):
+        data = dict()
+        settings = Settings.objects.first()
+        if request.method == 'POST':
+            form = Meter_DisconnectedForm(request.POST,request.FILES)
+            if form.is_valid():
+                profile = Profile.objects.get(pk=pk)
+                log = Activity_Logs.objects.create(user=self.request.user,profile=profile,logs = 5)
+                Profile.objects.filter(pk=pk).update(reconnection_charge = F('reconnection_charge') + settings.permanently_disconnected_charge)
+                Meter_Installation.objects.filter(profile_id=pk).delete()
+                Permanently_Disconnected.objects.create(profile=profile,user=self.request.user,remarks=form.instance.reason)
+                form.instance.profile = profile
+                form.instance.user = self.request.user
+                form.instance.log = log
+                form.instance.status = 3
+                form.save()
+                data['message_type'] = success
+                data['message_title'] = 'Successfully updated.'
+                data['url'] = reverse('waterworks_profile_detail',kwargs={'pk':profile.id})
+        return JsonResponse(data)
+
 # table profile
 class Waterworks_Profile_Table_AJAXView(LoginRequiredMixin,View):
     queryset = Profile.objects.all()
@@ -258,4 +370,57 @@ class Waterworks_Profile_Table_AJAXView(LoginRequiredMixin,View):
             data['counter'] = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains = search)).count()
             profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains = search)).order_by('surname','firstname')[int(start):int(end)]
             data['profile'] = render_to_string(self.template_name,{'profile':profile,'start':start})
+        return JsonResponse(data)
+
+# active
+class Waterworks_Profile_Meter_Active_Create(LoginRequiredMixin,TemplateView):
+    template_name = 'waterworks/components/meter_active_create.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Change Active"
+        try:
+            id = self.kwargs['pk']
+            context['profile'] = Profile.objects.get(id = id)
+        except Exception as e:
+            pass
+        return context
+class Waterworks_Profile_Meter_Active_Create_AJAXView(LoginRequiredMixin,View):
+    template_name = 'waterworks/forms/meter_active_forms.html'
+    def get(self, request):
+        data = dict()
+        try:
+            id = self.request.GET.get('id')
+        except KeyError:
+            id = None
+        profile = Profile.objects.get(pk=id)
+        form = Meter_DisconnectedForm()
+        context = {
+            'form': form,
+            'profile': profile,
+            'is_Create': True,
+            'btn_name': "primary",
+            'btn_title': "Activate",
+        }
+        data['html_form'] = render_to_string(self.template_name,context)
+        return JsonResponse(data)
+
+class Waterworks_Profile_Meter_Active_Create_Save_AJAXView(LoginRequiredMixin,View):
+    def post(self, request,pk):
+        data = dict()
+        reading_period = Reading_Period.objects.last()
+        if request.method == 'POST':
+            form = Meter_DisconnectedForm(request.POST,request.FILES)
+            if form.is_valid():
+                profile = Profile.objects.get(pk=pk)
+                log = Activity_Logs.objects.create(user=self.request.user,profile=profile,logs = 6)
+                Meter_Installation.objects.filter(profile_id=pk).update(status=1,reading_period=reading_period)
+                form.instance.profile = profile
+                form.instance.user = self.request.user
+                form.instance.log = log
+                form.instance.status = 1
+                form.save()
+                data['message_type'] = success
+                data['message_title'] = 'Successfully updated.'
+                data['url'] = reverse('waterworks_profile_detail',kwargs={'pk':profile.id})
         return JsonResponse(data)

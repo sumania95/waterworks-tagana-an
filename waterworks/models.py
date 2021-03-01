@@ -134,9 +134,32 @@ class Reading_Period(models.Model):
     class Meta:
         ordering = ['month']
 
+logs = (
+    ('1', 'Information Changed',),
+    ('2', 'Intalled Water Meter',),
+    ('3', 'Replace Water Meter',),
+    ('4', 'Disconnected',),
+    ('5', 'Condemn',),
+    ('6', 'Active Meter',),
+)
+
+class Activity_Logs(models.Model):
+    user                    = models.ForeignKey(User, on_delete = models.CASCADE)
+    profile                 = models.ForeignKey(Profile, on_delete = models.CASCADE)
+    logs                    = models.CharField(max_length=200,choices=logs,default=1)
+    date_updated            = models.DateTimeField(auto_now = True)
+    date_created            = models.DateTimeField(auto_now_add = True)
+
+class User_Logs(models.Model):
+    user                    = models.ForeignKey(User, on_delete = models.CASCADE)
+    user_logs               = models.CharField(max_length=200,choices=logs,default=1)
+    date_updated            = models.DateTimeField(auto_now = True)
+    date_created            = models.DateTimeField(auto_now_add = True)
+
 status = (
     ('1', 'Active',),
     ('2', 'Disconnected',),
+    ('3', 'Permanently Disconnected',),
 )
 
 class Meter_Installation(models.Model):
@@ -149,6 +172,15 @@ class Meter_Installation(models.Model):
     cluster                 = models.CharField(default="0000",max_length = 200)
     sequence                = models.CharField(default="0000",max_length = 200)
     date_reading            = models.DateTimeField()
+    date_updated            = models.DateTimeField(auto_now = True)
+    date_created            = models.DateTimeField(auto_now_add = True)
+
+class Meter_Status_History(models.Model):
+    user                    = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile                 = models.ForeignKey(Profile, on_delete = models.CASCADE)
+    log                     = models.OneToOneField(Activity_Logs, on_delete = models.CASCADE)
+    status                  = models.CharField(max_length=200,choices=status)
+    reason                  = models.CharField(max_length = 200)
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
 
@@ -237,24 +269,5 @@ class Collection_Charges_Cancelled(models.Model):
     or_number               = models.CharField(max_length = 200)
     amount                  = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
     reason                  = models.CharField(max_length = 200)
-    date_updated            = models.DateTimeField(auto_now = True)
-    date_created            = models.DateTimeField(auto_now_add = True)
-
-logs = (
-    ('1', 'Information Changed',),
-    ('2', 'Intalled Water Meter',),
-    ('3', 'Replace Water Meter',),
-)
-
-class Activity_Logs(models.Model):
-    user                    = models.ForeignKey(User, on_delete = models.CASCADE)
-    profile                 = models.ForeignKey(Profile, on_delete = models.CASCADE)
-    logs                    = models.CharField(max_length=200,choices=logs,default=1)
-    date_updated            = models.DateTimeField(auto_now = True)
-    date_created            = models.DateTimeField(auto_now_add = True)
-
-class User_Logs(models.Model):
-    user                    = models.ForeignKey(User, on_delete = models.CASCADE)
-    user_logs               = models.CharField(max_length=200,choices=logs,default=1)
     date_updated            = models.DateTimeField(auto_now = True)
     date_created            = models.DateTimeField(auto_now_add = True)
