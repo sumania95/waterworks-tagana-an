@@ -74,7 +74,7 @@ class Waterworks_Reading_Create_Save_AJAXView(LoginRequiredMixin,View):
                 present_reading = form.instance.present_reading
                 profile = Profile.objects.get(id=pk)
                 classification = Classification.objects.get(id=profile.classification_id)
-                classification_rates = Classification_Rates.objects.filter(classification=classification).order_by('rate')
+                classification_rates = Classification_Rates.objects.filter(classification=classification).order_by('consumption')
                 meter_installation = Meter_Installation.objects.get(profile=profile)
                 reading_period = Reading_Period.objects.latest('pk')
                 total_reading = float(present_reading) - meter_installation.reading

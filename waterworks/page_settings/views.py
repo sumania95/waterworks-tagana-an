@@ -16,8 +16,14 @@ from django.http import JsonResponse
 from django.template import RequestContext
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from waterworks.models import Settings
-from .forms import SettingsForm
+from waterworks.models import (
+    Settings,
+    Modem
+)
+from .forms import (
+    SettingsForm,
+    ModemForm,
+)
 success = 'success'
 info = 'info'
 error = 'error'
@@ -38,6 +44,7 @@ class Waterwork_Settings_AJAXView(LoginRequiredMixin,View):
             form = SettingsForm()
         context = {
             'form':form,
+            'title' : "Maintenance",
             'btn_name' : 'primary',
             'btn_title' : 'Change',
         }
@@ -51,6 +58,37 @@ class Waterwork_Settings_AJAXView(LoginRequiredMixin,View):
                 form = SettingsForm(request.POST,request.FILES,instance = setting)
             else:
                 form = SettingsForm(request.POST,request.FILES)
+            if form.is_valid():
+                form.save()
+                data['message_type'] = success
+                data['message_title'] = 'Successfully changed.'
+                data['form_is_valid'] = True
+        return JsonResponse(data)
+
+class Waterwork_Modem_AJAXView(LoginRequiredMixin,View):
+    def get(self, request):
+        data = dict()
+        setting = Modem.objects.first()
+        if setting:
+            form = ModemForm(instance=setting)
+        else:
+            form = ModemForm()
+        context = {
+            'form':form,
+            'title' : "SMS Modem Configuration",
+            'btn_name' : 'primary',
+            'btn_title' : 'Change',
+        }
+        data['html_form'] = render_to_string('waterworks/forms/modem_forms.html',context)
+        return JsonResponse(data)
+    def post(self, request):
+        data = dict()
+        if request.method == 'POST':
+            setting = Modem.objects.first()
+            if setting:
+                form = ModemForm(request.POST,request.FILES,instance = setting)
+            else:
+                form = ModemForm(request.POST,request.FILES)
             if form.is_valid():
                 form.save()
                 data['message_type'] = success

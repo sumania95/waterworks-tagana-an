@@ -14,10 +14,24 @@ class Reports(models.Model):
 class Settings(models.Model):
     name                                = models.CharField(max_length = 200)
     address                             = models.CharField(max_length = 200)
+    notices                             = models.CharField(default="",max_length = 1000)
     logo                                = models.FileField(upload_to='logo/')
     water_meter_charge                  = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
     disconnection_charge                = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
     permanently_disconnected_charge     = models.DecimalField(default=0,max_digits = 50,decimal_places=2)
+    date_updated                        = models.DateTimeField(auto_now = True)
+    date_created                        = models.DateTimeField(auto_now_add = True)
+
+class Modem(models.Model):
+    ip_address                          = models.CharField(max_length = 200)
+    username                            = models.CharField(max_length = 200)
+    password                            = models.CharField(max_length = 200)
+    date_updated                        = models.DateTimeField(auto_now = True)
+    date_created                        = models.DateTimeField(auto_now_add = True)
+
+class Billing_Template(models.Model):
+    name                                = models.CharField(max_length = 200)
+    file                                = models.FileField(upload_to='template/')
     date_updated                        = models.DateTimeField(auto_now = True)
     date_created                        = models.DateTimeField(auto_now_add = True)
 
@@ -212,6 +226,9 @@ class Reading(models.Model):
     @property
     def consumption(self):
         return int(self.present_reading) - int(self.previous_reading)
+    @property
+    def total_amount(self):
+        return float(self.amount) + float(self.service_charge)
 
 class Permanently_Disconnected(models.Model):
     user                    = models.ForeignKey(User, on_delete=models.CASCADE)

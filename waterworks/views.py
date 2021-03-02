@@ -18,9 +18,22 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .decorators import ConfigurationRequired
+from .models import (
+    Profile,
+    Reading_Period,
+)
 
 class Waterworks_Home(LoginRequiredMixin,ConfigurationRequired,TemplateView):
     template_name = 'waterworks/pages/dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reading_period = Reading_Period.objects.latest('pk')
+        counter = Profile.objects.filter(meter_installation__status=1,meter_installation__reading_period__lt=reading_period).count()
+        if counter > 0:
+            context['status'] = True
+            context['counter'] = str(counter)
+        return context
 
 class Waterworks_Accounts(LoginRequiredMixin,TemplateView):
     template_name = 'waterworks/pages/accounts.html'

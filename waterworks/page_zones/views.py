@@ -63,10 +63,10 @@ class Waterworks_Zones_Table_AJAXView(LoginRequiredMixin,View):
             data['form_is_valid'] = True
             data['counter'] = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains=search),meter_installation__status__in=[1,2],barangay=barangay).count()
             if zones == 'Cluster':
-                profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains=search),meter_installation__status__in=[1,2],barangay=barangay).order_by('meter_installation__cluster')[int(start):int(end)]
+                profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains=search),meter_installation__status__in=[1,2],barangay=barangay).order_by('meter_installation__cluster','surname','firstname')[int(start):int(end)]
                 data['profile'] = render_to_string(self.template_name_cluster,{'profile':profile,'start':start})
             elif zones == 'Sequence':
-                profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains=search),meter_installation__status__in=[1,2],barangay=barangay).order_by('meter_installation__sequence')[int(start):int(end)]
+                profile = self.queryset.filter(Q(firstname__icontains = search)|Q(surname__icontains=search),meter_installation__status__in=[1,2],barangay=barangay).order_by('meter_installation__sequence','surname','firstname')[int(start):int(end)]
                 data['profile'] = render_to_string(self.template_name_sequence,{'profile':profile,'start':start})
         return JsonResponse(data)
 

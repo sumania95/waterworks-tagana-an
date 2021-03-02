@@ -11,10 +11,7 @@
     &#8369; {{p.amount}}
   </td>
   <td>
-    <a href="{% url 'waterworks_barangay_update' p.id %}" class="btn btn-warning btn-sm rounded-circle" name="button"><i class="feather icon-edit"></i></a>
-    {% if p.is_active %}
-    <a href="#" class="btn btn-secondary btn-sm rounded-circle" name="button"><i class="feather icon-printer"></i></a>
-    {% endif %}
+    <a href="{% url 'waterworks_reading_period_billing_statement_single_print' p.id %}" target="_blank" class="btn btn-secondary btn-sm rounded-circle" name="button"><i class="feather icon-printer"></i></a>
   </td>
 </tr>
 {% empty %}

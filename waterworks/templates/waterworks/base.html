@@ -52,9 +52,11 @@
               <li class="nav-item {% block 'barangay_active' %}{% endblock %}">
                 <a href="{% url 'waterworks_barangay' %}" class="nav-link ">Barangay</a>
               </li>
-              <!-- <li class="nav-item {% block 'classification_active' %}{% endblock %}">
+              {% if user.is_superuser %}
+              <li class="nav-item {% block 'classification_active' %}{% endblock %}">
                 <a href="{% url 'waterworks_classification' %}" class="nav-link ">Classification</a>
-              </li> -->
+              </li>
+              {% endif %}
               <li class="nav-item {% block 'reading_period_active' %}{% endblock %}">
                 <a href="{% url 'waterworks_reading_period' %}" class="nav-link ">Reading Period</a>
               </li>
@@ -72,6 +74,9 @@
         <li class="nav-item {% block 'account_active' %}{% endblock %}">
           <a href="{% url 'waterworks_account' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-user"></i></span><span class="pcoded-mtext">Users</span></a>
         </li>
+        <!-- <li class="nav-item {% block 'import_active' %}{% endblock %}">
+          <a href="#" class="nav-link "><span class="pcoded-micon"><i class="feather icon-upload"></i></span><span class="pcoded-mtext">Import</span></a>
+        </li> -->
         <li class="nav-item">
           <a href="{% url 'waterworks_logout' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-log-out text-danger"></i></span><span class="pcoded-mtext">Sign Out</span></a>
         </li>
@@ -159,7 +164,7 @@
   });
 </script>
 <script type="text/javascript">
-  
+
   function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+    {% load static %}
+    {% load mathfilters %}
+    {% load humanize %}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+    <title>Print Billing</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'image/lgutubodlogo.png' %}"/>
+    <style type="text/css">
+    @page {
+      size: a4 portrait;
+      top: 35pt;
+      right: 35pt;
+      left:35pt;
+      height: 750pt;
+      margin: 0;
+      padding: 0;
+
+    }
+    .font-times {
+          font-family: "Arial";
+          font-size: 12px;
+    }
+    @media all {
+        .page-break { display: block; }
+    }
+
+    @media print {
+      .page-break {page-break-after: auto;}
+    }
+    .logo{
+      width: 40px;
+      height: 40px;
+    }
+
+
+    </style>
+
+</head>
+<body>
+{% load imagefit %}
+
+<div class="container">
+  {% for p in reading %}
+  <div class="page-break">
+  <div class="font-times">
+    <table>
+      <tr>
+        <td rowspan="2" style="width: 60px;vertical-align:top;padding-right:4px;"><img src="{{settings.logo.url}}" alt=""></td>
+        <td>
+          <h5>{{settings.name|upper}}</h5>
+        </td>
+        <td style="width:150px;">Billing Month :</td>
+        <td style="width:100px;text-align:right;"><b>{{p.reading_period.get_month_display}} {{p.reading_period.year}}</b></td>
+      </tr>
+      <tr>
+        <td style="padding-bottom:2px;">{{settings.address|title}}<br>Caraga Region XIII <br> 09090953890</td>
+        <td style="vertical-align: top;">Bill Generated :</td>
+        <td style="vertical-align: top;text-align:right;">{{now|date:"m-d-Y"}}</td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td><i>Consumer Information</i></td>
+        <td style="width:250px;"><i>Billing Information</i></td>
+      </tr>
+      <tr style="padding-bottom:4px;">
+        <td><b style="font-size:16px;">{{p.profile.surname}}, {{p.profile.firstname}}</b></td>
+        <td><p style="vertical-align:bottom;"><i>Charges</i></p></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td style="width:150px;">Account No</td>
+        <td>{{p.account_no}}</td>
+        <td style="width:150px;border-bottom:1px solid #000;"><h5>Water Meter</h5></td>
+        <td style="width:100px;border-bottom:1px solid #000;text-align:right;"><h5>Php. {{p.water_meter_charge|intcomma}}</h5></td>
+      </tr>
+      <tr style="padding-top:3px;">
+        <td>Account Type</td>
+        <td>{{p.profile.classification}}</td>
+        <td>Present Bill</td>
+        <td style="text-align:right;">{{p.amount|intcomma}}</td>
+      </tr>
+      <tr>
+        <td>Meter No</td>
+        <td>{{p.profile.meter_no}}</td>
+        <td style="">Unpaid Bill</td>
+        <td style="text-align:right;">{{p.service_charge|intcomma}}</td>
+      </tr>
+      <tr>
+        <td style="vertical-align:top;">Address</td>
+        <td>{{p.profile.barangay}}, Tubod, Surigao del Norte</td>
+        <td style="width:150px;vertical-align:top;border-bottom:1px solid #000;"><h5>Total Amount Due</h5></td>
+        <td style="width:100px;vertical-align:top;border-bottom:1px solid #000;text-align:right;"><h5>Php. {{p.total_amount|floatformat:2|intcomma}}</h5></td>
+      </tr>
+    </table>
+    <table>
+      <tr style="padding-top:2px;">
+        <td style="width:150px;"></td>
+        <td style="width:100px;"><small>Date</small></td>
+        <td><small>Reading</small></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr style="padding-top:2px;">
+        <td style="width:150px;">Present Reading</td>
+        <td style="width:100px;">{{p.present_reading_date|date:"m-d-Y"}}</td>
+        <td><p>{{p.present_reading}}</p></td>
+        <td style="width:150px;">Due Date</td>
+        <td style="width:100px;text-align:right;">{{p.reading_period.due_date|date:"m-d-Y"}}</td>
+      </tr>
+      <tr style="padding-top:2px;">
+        <td style="width:150px;">Previous Reading</td>
+        <td style="width:100px;">{{p.previous_reading_date|date:"m-d-Y"}}</td>
+        <td><p>{{p.previous_reading}}</p></td>
+        <td style="width:150px;">Disconnection Date</td>
+        <td style="width:100px;text-align:right;">{{p.reading_period.disconnection_date|date:"m-d-Y"}}</td>
+      </tr>
+      <tr style="padding-top:2px;padding-bottom:2px;">
+        <td style="width:150px;">Consumption</td>
+        <td colspan="2" style="width:100px;"><b>{{p.consumption}} m³</b></td>
+        <td style="width:150px;">Sequence No</td>
+        <td style="width:100px;text-align:right;">{{forloop.counter}}</td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td style="text-align:center;border-bottom:1px solid #000; padding-top:2px;"><i><h5>*NOTICES AND REMINDERS TO BE WRITTEN HERE*</h5></i></td>
+      </tr>
+      <tr>
+        <td style="text-align:center;border-bottom:1px solid #000; padding-top:5px;padding-bottom:20px;"><i><p>{{settings.notices}}</p></i></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td style="padding-bottom:60px;"></td>
+      </tr>
+    </table>
+  </div>
+  </div>
+  {% endfor %}
+</div>
+
+</body>
+</html>

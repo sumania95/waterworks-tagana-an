@@ -4,7 +4,7 @@
   {{title}}
 </div>
 <div class="card-body p-2">
-  <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_settings_api' %}" class="custom-form">
+  <form method="POST" enctype="multipart/form-data" data-url="{% url 'waterworks_modem_api' %}" class="custom-form-modem">
     {{form|crispy}}
     <button type="submit" class="btn btn-{{btn_name}}">{{btn_title}}</button>
   </form>
@@ -14,7 +14,7 @@
   $(document).ready(function () {
     var csrftoken = getCookie('csrftoken');
 
-    $(".custom-form").submit(function (event) {
+    $(".custom-form-modem").submit(function (event) {
       event.preventDefault();
       var form = $(this);
       var formData = new FormData($(form)[0]);

@@ -18,6 +18,7 @@ from django.template import RequestContext
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Models
 from waterworks.models import (
+    Reading,
     Reading_Period,
     Meter_Installation,
     Barangay,
@@ -68,3 +69,33 @@ class Waterworks_Reading_Period_Print(LoginRequiredMixin,View):
         }
         pdf = Render.render('waterworks/reports/reading_period_print.html', params)
         return pdf
+
+#printing
+class Waterworks_Reading_Period_Billing_Statement_Print(View):
+    def get(self, request,pk):
+        try:
+            barangay_id = self.request.GET.get('barangay_id')
+        except KeyError:
+            barangay_id = None
+        reading = Reading.objects.filter(profile__barangay_id = barangay_id,reading_period_id=pk).order_by('profile__meter_installation__sequence','profile__surname','profile__firstname')
+        settings = Settings.objects.last()
+        now = timezone.now()
+        params = {
+            'reading': reading,
+            'settings': settings,
+            'now':now,
+        }
+        return Render.render('waterworks/reports/billing_batch.html', params)
+
+#printing
+class Waterworks_Reading_Period_Billing_Statement_Single_Print(View):
+    def get(self, request,pk):
+        reading = Reading.objects.get(id=pk)
+        settings = Settings.objects.last()
+        now = timezone.now()
+        params = {
+            'reading': reading,
+            'settings': settings,
+            'now':now,
+        }
+        return Render.render('waterworks/reports/billing_single.html', params)

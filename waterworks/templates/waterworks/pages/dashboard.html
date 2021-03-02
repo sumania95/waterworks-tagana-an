@@ -4,6 +4,11 @@
 
 {% block 'content' %}
 <div class="col-12" id="dashboard_content">
+  {% if status %}
+  <div class="alert alert-danger" role="alert">
+      {{counter}} profile unreading record(s)
+  </div>
+  {% endif %}
   <div class="row">
     <!-- order-card start -->
     <div class="col-md-6 col-xl-3">

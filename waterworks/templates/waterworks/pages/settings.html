@@ -10,6 +10,10 @@
   <div class="card" id="form">
   </div>
 </div>
+<div class="col-md-12">
+  <div class="card" id="modem">
+  </div>
+</div>
 {% endblock %}
 
 
@@ -27,6 +31,18 @@
 
   };
   form_load();
+  function modem_load(){
+    $.ajax({
+      url: '{% url 'waterworks_modem_api' %}',
+      type: 'get',
+      dataType: 'json',
+      success:function(data){
+        $('#modem').html(data.html_form);
+      },
+    });
+
+  };
+  modem_load();
 </script>
 
 {% endblock %}
