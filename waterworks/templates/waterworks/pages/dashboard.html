@@ -14,36 +14,58 @@
     <div class="col-md-6 col-xl-3">
       <div class="card bg-c-blue order-card">
         <div class="card-body p-2">
-          <h6 class="text-white">USERS</h6>
-          <h3 class="text-right text-white"><i class="feather icon-users float-left"></i><span>12,222</span></h3>
+          <h6 class="text-white">PROFILES</h6>
+          <h3 class="text-right text-white"><i class="fa fa-users float-left"></i><span>{{total_profile}}</span></h3>
         </div>
       </div>
     </div>
     <div class="col-md-6 col-xl-3">
       <div class="card bg-c-green order-card">
         <div class="card-body p-2">
-          <h6 class="text-white">DESIGNATED</h6>
-          <h3 class="text-right text-white"><i class="feather icon-users float-left"></i><span>1</span></h3>
+          <h6 class="text-white">NEW</h6>
+          <h3 class="text-right text-white"><i class="fa fa-users float-left"></i><span>{{total_new}}</span></h3>
         </div>
       </div>
     </div>
     <div class="col-md-6 col-xl-3">
       <div class="card bg-c-yellow order-card">
         <div class="card-body p-2">
-          <h6 class="text-white">CONTRACTUAL</h6>
-          <h3 class="text-right text-white"><i class="feather icon-users float-left"></i><span>2</span></h3>
+          <h6 class="text-white">YEARLY CONSUMPTION</h6>
+          <h3 class="text-right text-white"><i class="fa fa-tachometer-alt float-left"></i><span>{{yearly_consumption}} <small>m³</small></span></h3>
         </div>
       </div>
     </div>
     <div class="col-md-6 col-xl-3">
       <div class="card bg-c-red order-card">
         <div class="card-body p-2">
-          <h6 class="text-white">RETIRABLES</h6>
-          <h3 class="text-right text-white"><i class="feather icon-user-x float-left"></i><span>5</span></h3>
+          <h6 class="text-white">MONTHLY CONSUMPTION</h6>
+          <h3 class="text-right text-white"><i class="fa fa-tachometer-alt float-left"></i><span>{{monthly_consumption}} <small>m³</small></span></h3>
         </div>
       </div>
     </div>
     <!-- order-card end -->
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header p-2">
+          <h5>CLASSIFICATION <small>(active only)</small></h5>
+        </div>
+        <div class="card-body p-2">
+          <div id="classification-pie"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header p-2">
+          <h5>BARANGAY <small>(active only)</small></h5>
+        </div>
+        <div class="card-body p-2">
+          <div id="barangay-pie"></div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-12">
@@ -79,123 +101,81 @@
     $(function() {
       var options = {
         chart: {
-          height: 350,
-          type: 'bar',
+          height: 320,
+          type: 'donut',
         },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            endingShape: 'rounded'
-          },
-        },
-        dataLabels: {
-          enabled: false
-        },
-        colors: ["#0e9e4a", "#4099ff", "#FF5370"],
-        stroke: {
+        labels: [{% for p in barangay_name_list %}"{{p.barangay__name}}",{% endfor %}],
+        series: [{% for p in barangay_name_list %}{{p.counter}},{% endfor %}],
+        // colors: ["#4099ff", "#0e9e4a", "#00bcd4", "#FFB64D", "#FF5370"],
+        legend: {
           show: true,
-          width: 2,
-          colors: ['transparent']
+          position: 'bottom',
         },
         fill: {
           type: 'gradient',
           gradient: {
             shade: 'light',
-            type: "vertical",
-            shadeIntensity: 0.25,
             inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 0.7,
-            stops: [50, 100]
-          },
-        },
-        series: [{
-          name: 'Net Profit',
-          data: [44, 55, 57, 56, 61, 58, 63]
-        }, {
-          name: 'Revenue',
-          data: [76, 85, 101, 98, 87, 105, 91]
-        }, {
-          name: 'Free Cash Flow',
-          data: [35, 41, 36, 26, 45, 48, 52]
-        }],
-        xaxis: {
-          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-        },
-        yaxis: {
-          title: {
-            text: '$ (thousands)'
           }
         },
-        tooltip: {
-          y: {
-            formatter: function(val) {
-              return "$ " + val + " thousands"
+        dataLabels: {
+          enabled: true,
+          dropShadow: {
+            enabled: false,
+          }
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom'
             }
           }
-        }
+        }]
       }
       var chart = new ApexCharts(
-      document.querySelector("#bar-chart-1"),
+      document.querySelector("#barangay-pie"),
       options
       );
       chart.render();
     });
-
     $(function() {
       var options = {
         chart: {
-          height: 350,
-          type: 'line',
+          height: 320,
+          type: 'pie',
         },
-        series: [{
-          name: 'Website Blog',
-          type: 'column',
-          data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
-        }, {
-          name: 'Social Media',
-          type: 'line',
-          data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16]
-        }],
-        stroke: {
-          width: [0, 4]
+        labels: [{% for p in classification_name_list %}"{{p.classification__name}}",{% endfor %}],
+        series: [{% for p in classification_name_list %}{{p.counter}},{% endfor %}],
+        // colors: ["#4099ff", "#0e9e4a", "#00bcd4", "#FFB64D", "#FF5370"],
+        legend: {
+          show: true,
+          position: 'bottom',
         },
-        colors: ["#4099ff", "#FF5370"],
         fill: {
           type: 'gradient',
           gradient: {
             shade: 'light',
-            type: "vertical",
-            shadeIntensity: 0.25,
             inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 0.7,
-            stops: [50, 100]
-          },
+          }
         },
-        title: {
-          text: 'Traffic Sources'
+        dataLabels: {
+          enabled: true,
+          dropShadow: {
+            enabled: false,
+          }
         },
-        labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
-        xaxis: {
-          type: 'datetime'
-        },
-        yaxis: [{
-          title: {
-            text: 'Website Blog',
-          },
-
-        }, {
-          opposite: true,
-          title: {
-            text: 'Social Media'
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom'
+            }
           }
         }]
-
       }
       var chart = new ApexCharts(
-      document.querySelector("#bar-chart-3"),
+      document.querySelector("#classification-pie"),
       options
       );
       chart.render();

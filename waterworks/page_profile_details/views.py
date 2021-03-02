@@ -39,8 +39,10 @@ class Waterworks_Profile_Detail_Overview_AJAXView(LoginRequiredMixin,View):
     template_name = 'waterworks/pages/profile_detail_overview.html'
     def get(self, request,pk):
         data = dict()
+        profile = Profile.objects.get(id=pk)
         context = {
             'pk': pk,
+            'profile': profile,
         }
         data['html_form'] = render_to_string(self.template_name,context)
         return JsonResponse(data)

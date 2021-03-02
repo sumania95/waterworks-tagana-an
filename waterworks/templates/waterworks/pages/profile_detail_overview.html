@@ -1,9 +1,11 @@
+{% load mathfilters %}
+{% load humanize %}
 <div class="row">
     <div class="col-lg-4">
       <div class="card bg-c-green order-card">
         <div class="card-body p-1">
           <h6 class="text-center text-white">SERVICE CHARGE</h6>
-          <h5 class="text-center text-white">12,000.00</h5>
+          <h5 class="text-center text-white">{{profile.service_charge|intcomma}}</h5>
         </div>
         <div class="card-footer p-0 m-0">
           <button class="btn btn-block btn-primary" type="button" name="button"><i class="feather icon-briefcase text-white mr-2"></i>PAYMENT</button>
@@ -14,7 +16,7 @@
       <div class="card bg-c-green order-card">
         <div class="card-body p-1">
           <h6 class="text-center text-white">METER CHARGE</h6>
-          <h5 class="text-center text-white">12,000.00</h5>
+          <h5 class="text-center text-white">{{profile.water_meter_charge|intcomma}}</h5>
         </div>
         <div class="card-footer p-0 m-0">
           <button class="btn btn-block btn-primary" type="button" name="button"><i class="feather icon-briefcase text-white mr-2"></i>PAYMENT</button>
@@ -25,7 +27,7 @@
       <div class="card bg-c-green order-card">
         <div class="card-body p-1">
           <h6 class="text-center text-white">RECONNECTION CHARGE</h6>
-          <h5 class="text-center text-white">12,000.00</h5>
+          <h5 class="text-center text-white">{{profile.reconnection_charge|intcomma}}</h5>
         </div>
         <div class="card-footer p-0 m-0">
           <button class="btn btn-block btn-primary" type="button" name="button"><i class="feather icon-briefcase text-white mr-2"></i>PAYMENT</button>

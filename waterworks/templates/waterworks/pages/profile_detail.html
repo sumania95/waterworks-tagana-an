@@ -162,44 +162,50 @@
 {% block 'script' %}
 <script>
   $(document).ready(function () {
-    $.ajax({
-      url: '{% url 'waterworks_profile_detail_overview_api' object.id %}',
-      type: 'get',
-      dataType: 'json',
-      success:function(data){
-        $('#overview').html(data.html_form);
-      },
-    });
-  });
-  $(document).ready(function () {
-    $.ajax({
-      url: '{% url 'waterworks_profile_detail_reading_api' object.id %}',
-      type: 'get',
-      dataType: 'json',
-      success:function(data){
-        $('#reading').html(data.html_form);
-      },
-    });
-  });
-  $(document).ready(function () {
-    $.ajax({
-      url: '{% url 'waterworks_profile_detail_collection_api' object.id %}',
-      type: 'get',
-      dataType: 'json',
-      success:function(data){
-        $('#collection').html(data.html_form);
-      },
-    });
-  });
-  $(document).ready(function () {
-    $.ajax({
-      url: '{% url 'waterworks_profile_detail_activity_api' object.id %}',
-      type: 'get',
-      dataType: 'json',
-      success:function(data){
-        $('#activity').html(data.html_form);
-      },
-    });
+    function overview(){
+      $.ajax({
+        url: '{% url 'waterworks_profile_detail_overview_api' object.id %}',
+        type: 'get',
+        dataType: 'json',
+        success:function(data){
+          $('#overview').html(data.html_form);
+        },
+      });
+    };
+    overview();
+    function reading_details(){
+      $.ajax({
+        url: '{% url 'waterworks_profile_detail_reading_api' object.id %}',
+        type: 'get',
+        dataType: 'json',
+        success:function(data){
+          $('#reading').html(data.html_form);
+        },
+      });
+    };
+    reading_details();
+    function collection_details(){
+      $.ajax({
+        url: '{% url 'waterworks_profile_detail_collection_api' object.id %}',
+        type: 'get',
+        dataType: 'json',
+        success:function(data){
+          $('#collection').html(data.html_form);
+        },
+      });
+    };
+    collection_details();
+    function activity_details(){
+      $.ajax({
+        url: '{% url 'waterworks_profile_detail_activity_api' object.id %}',
+        type: 'get',
+        dataType: 'json',
+        success:function(data){
+          $('#activity').html(data.html_form);
+        },
+      });
+    };
+    activity_details();
   });
 </script>
 

@@ -20,7 +20,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .decorators import ConfigurationRequired
 from .models import (
     Profile,
+    Meter_Installation,
+    Reading,
     Reading_Period,
+    Permanently_Disconnected,
 )
 
 class Waterworks_Home(LoginRequiredMixin,ConfigurationRequired,TemplateView):
@@ -33,6 +36,13 @@ class Waterworks_Home(LoginRequiredMixin,ConfigurationRequired,TemplateView):
         if counter > 0:
             context['status'] = True
             context['counter'] = str(counter)
+        context['total_profile'] = Profile.objects.all().count()
+        profile_new = Profile.objects.exclude(id__in = Meter_Installation.objects.values('profile_id'))
+        context['total_new'] = profile_new.exclude(id__in = Permanently_Disconnected.objects.values('profile_id')).count()
+        context['monthly_consumption'] = Reading.objects.filter(reading_period=reading_period).values('reading_period').annotate(dsum=Sum(F('present_reading')-F('previous_reading')))[0]['dsum']
+        context['yearly_consumption'] = Reading.objects.filter(reading_period__year=reading_period.year).values('reading_period__year').annotate(dsum=Sum(F('present_reading')-F('previous_reading')))[0]['dsum']
+        context['classification_name_list'] = Profile.objects.filter(meter_installation__status__in = [1,2]).values('classification__name').order_by('classification__name').annotate(counter=Count('classification__name'))
+        context['barangay_name_list'] = Profile.objects.filter(meter_installation__status__in = [1,2]).values('barangay__name').order_by('barangay__name').annotate(counter=Count('barangay__name'))
         return context
 
 class Waterworks_Accounts(LoginRequiredMixin,TemplateView):
